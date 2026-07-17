@@ -53,3 +53,22 @@ body::after{
 body{
     animation:flicker .08s infinite;
 }
+
+#cursor{
+    color:#39ff14;
+    font-size:22px;
+    animation:blink .8s infinite;
+    text-shadow:
+        0 0 5px #39ff14,
+        0 0 15px #39ff14;
+}
+
+@keyframes blink{
+    0%,45%{
+        opacity:1;
+    }
+
+    50%,100%{
+        opacity:0;
+    }
+}
