@@ -1,0 +1,55 @@
+body{
+    margin:0;
+    background:#050505;
+    color:#39ff14;
+    font-family:Consolas, monospace;
+    overflow:hidden;
+}
+
+#boot-screen{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+    padding:40px;
+}
+
+#boot-text{
+    font-size:22px;
+    line-height:1.6;
+    white-space:pre-wrap;
+    text-shadow:
+        0 0 5px #39ff14,
+        0 0 15px #39ff14;
+}
+
+/* CRT Flicker */
+
+body::after{
+    content:"";
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    pointer-events:none;
+    background:
+    repeating-linear-gradient(
+        to bottom,
+        rgba(255,255,255,.03),
+        rgba(255,255,255,.03) 2px,
+        transparent 2px,
+        transparent 4px
+    );
+    opacity:.2;
+}
+
+@keyframes flicker{
+    0%{opacity:.97;}
+    50%{opacity:1;}
+    100%{opacity:.95;}
+}
+
+body{
+    animation:flicker .08s infinite;
+}
