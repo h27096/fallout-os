@@ -1,1 +1,58 @@
+/* Scanlines */
 
+body::before{
+    content:"";
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+
+    background:
+        repeating-linear-gradient(
+            to bottom,
+            rgba(255,255,255,.05) 0px,
+            rgba(255,255,255,.05) 1px,
+            transparent 2px,
+            transparent 4px
+        );
+
+    opacity:.15;
+}
+
+/* Screen Glow */
+
+body::after{
+
+    content:"";
+
+    position:fixed;
+
+    inset:0;
+
+    pointer-events:none;
+
+    background:
+        radial-gradient(
+            circle,
+            transparent 55%,
+            rgba(0,0,0,.45) 100%
+        );
+
+}
+
+/* CRT Flicker */
+
+@keyframes flicker{
+
+0%{opacity:.96;}
+25%{opacity:1;}
+50%{opacity:.98;}
+75%{opacity:.94;}
+100%{opacity:1;}
+
+}
+
+body{
+
+animation:flicker .08s infinite;
+
+}
