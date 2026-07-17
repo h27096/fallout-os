@@ -1,35 +1,45 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fallout OS</title>
-
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
-<div id="boot-screen">
+<div class="boot">
+    <h1>FALLOUT OS</h1>
+    <p>ROBCO INDUSTRIES UNIFIED OPERATING SYSTEM</p>
+    <button onclick="startOS()">START SYSTEM</button>
+</div>
 
-<pre id="boot-text"></pre>
-<span id="cursor">█</span>
-ROBCO INDUSTRIES (TM)
-UNIFIED OPERATING SYSTEM
 
-COPYRIGHT 2075-2077 ROBCO INDUSTRIES
+<div class="os" id="os">
 
-Initializing RobCo Systems...
-Loading Vault-Tec Modules...
-Checking Memory...
-Loading Terminal Services...
-Loading Holotape Drivers...
-Connecting Pip-Boy Interface...
-Initializing Security Protocols...
+    <header>
+        <h1>FALLOUT OS v2.0</h1>
+        <p>VAULT-TEC COMPUTER SYSTEM</p>
+    </header>
 
-SYSTEM READY
-</pre>
+
+    <div class="menu">
+
+        <button onclick="openTerminal()">TERMINAL</button>
+
+        <button onclick="showSystem()">SYSTEM</button>
+
+        <button onclick="showVault()">VAULT DATABASE</button>
+
+    </div>
+
+
+    <div id="screen">
+        Welcome to Fallout OS.
+    </div>
+
 
 </div>
+
 
 <script src="script.js"></script>
 
