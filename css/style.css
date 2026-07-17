@@ -1,98 +1,89 @@
-body{
-    margin:0;
-    background:#050505;
-    color:#39ff14;
-    font-family:Consolas, monospace;
-    overflow:hidden;
+body {
+
+    background:black;
+    color:#33ff33;
+    font-family:"Courier New", monospace;
+
 }
 
-#boot-screen{
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    height:100vh;
-    padding:40px;
+
+.boot {
+
+    text-align:center;
+    margin-top:200px;
+
 }
 
-#boot-text{
-    font-size:22px;
-    line-height:1.6;
-    white-space:pre-wrap;
-    text-shadow:
-        0 0 5px #39ff14,
-        0 0 15px #39ff14;
+
+button {
+
+    background:black;
+    color:#33ff33;
+    border:2px solid #33ff33;
+    padding:10px;
+    margin:10px;
+    font-family:inherit;
+    cursor:pointer;
+
 }
 
-/* CRT Flicker */
 
-body::after{
+button:hover {
+
+    background:#33ff33;
+    color:black;
+
+}
+
+
+.os {
+
+    display:none;
+    padding:30px;
+
+}
+
+
+header {
+
+    border-bottom:2px solid #33ff33;
+    padding-bottom:10px;
+
+}
+
+
+.menu {
+
+    margin-top:20px;
+
+}
+
+
+#screen {
+
+    border:2px solid #33ff33;
+    margin-top:20px;
+    padding:20px;
+    min-height:200px;
+
+}
+
+
+body::after {
+
     content:"";
     position:fixed;
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
-    pointer-events:none;
+    inset:0;
+
     background:
     repeating-linear-gradient(
-        to bottom,
-        rgba(255,255,255,.03),
-        rgba(255,255,255,.03) 2px,
+        0deg,
+        rgba(51,255,51,.05),
+        rgba(51,255,51,.05) 2px,
         transparent 2px,
         transparent 4px
     );
-    opacity:.2;
-}
 
-@keyframes flicker{
-    0%{opacity:.97;}
-    50%{opacity:1;}
-    100%{opacity:.95;}
-}
-
-body{
-    animation:flicker .08s infinite;
-}
-
-#cursor{
-    color:#39ff14;
-    font-size:22px;
-    animation:blink .8s infinite;
-    text-shadow:
-        0 0 5px #39ff14,
-        0 0 15px #39ff14;
-}
-
-@keyframes blink{
-    0%,45%{
-        opacity:1;
-    }
-
-    50%,100%{
-        opacity:0;
-    }
-}
-
-.cursor{
-
-    display:inline-block;
-
-    animation:blink .8s infinite;
-
-}
-
-@keyframes blink{
-
-    0%,45%{
-
-        opacity:1;
-
-    }
-
-    50%,100%{
-
-        opacity:0;
-
-    }
+    pointer-events:none;
 
 }
