@@ -13,7 +13,12 @@
 
 <button onclick="boot()">START SYSTEM</button>
 
-<div id="screen"></div>
+<div id="screen">
+    <span id="output"></span><span id="cursor">_</span>
+</div>
+
+<input id="command" placeholder="ENTER COMMAND">
+<button onclick="runCommand()">EXECUTE</button>
 
 <script src="script.js"></script>
 
