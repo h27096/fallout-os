@@ -1,0 +1,25 @@
+body {
+    background-color: black;
+    color: #33ff33;
+    font-family: "Courier New", monospace;
+    text-align: center;
+    margin-top: 100px;
+}
+
+button {
+    background-color: black;
+    color: #33ff33;
+    border: 2px solid #33ff33;
+    padding: 10px;
+    font-family: "Courier New", monospace;
+}
+
+button:hover {
+    background-color: #33ff33;
+    color: black;
+}
+
+#screen {
+    margin-top: 30px;
+    font-size: 20px;
+}
