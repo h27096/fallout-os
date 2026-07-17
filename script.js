@@ -56,7 +56,7 @@ function runCommand(){
         output.innerHTML +=
         "<br><br>UNKNOWN COMMAND.";
 
-     }
+    }
 
     else if(command == "2287"){
 
