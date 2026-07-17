@@ -1,28 +1,41 @@
 const bootText = document.getElementById("boot-text");
+const cursor = document.getElementById("cursor");
 
-const lines = bootText.innerText.split("\n");
+const bootLines = [
+"ROBCO INDUSTRIES (TM)",
+"UNIFIED OPERATING SYSTEM",
+"",
+"COPYRIGHT 2075-2077 ROBCO INDUSTRIES",
+"",
+"Initializing RobCo Systems...",
+"Loading Vault-Tec Modules...",
+"Checking Memory...",
+"Loading Terminal Services...",
+"Loading Holotape Drivers...",
+"Connecting Pip-Boy Interface...",
+"Initializing Security Protocols...",
+"",
+"SYSTEM READY"
+];
 
-bootText.innerText = "";
-
-let i = 0;
+let line = 0;
 
 function typeLine(){
 
-    if(i < lines.length){
+    if(line < bootLines.length){
 
-        bootText.innerHTML += lines[i] + "<br>";
+        bootText.innerHTML += bootLines[line] + "\n";
 
-        window.scrollTo(0,document.body.scrollHeight);
-
-        i++;
+        line++;
 
         setTimeout(typeLine,400);
 
     }else{
 
         setTimeout(()=>{
-            alert("Boot Complete\n\nVersion 0.1.0");
-        },1000);
+            // Later we'll transition to the login screen here.
+            alert("Boot Complete");
+        },1200);
 
     }
 
