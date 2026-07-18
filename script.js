@@ -1,3 +1,5 @@
+let personalLogs = [];
+let writingLog = false;
 let overseerMode = false;
 let waitingForPassword = false;
 let failedAttempts = 0;
@@ -115,6 +117,21 @@ function runCommand(){
     return;
 
 }
+
+        if(writingLog){
+
+    personalLogs.push(command);
+
+    output.innerHTML +=
+    "<br><br>LOG SAVED.";
+
+    writingLog = false;
+
+    document.getElementById("command").value="";
+
+    return;
+
+}
         
 else if(command == "HELP"){
 
@@ -210,6 +227,27 @@ else if(command == "OVERSEER"){
     }
 
 }
+
+else if(command == "WRITELOG"){
+
+    if(overseerMode){
+
+        output.innerHTML +=
+        "<br><br>ENTER LOG TEXT:";
+
+        writingLog = true;
+
+    }
+
+    else{
+
+        output.innerHTML +=
+        "<br><br>ACCESS DENIED.";
+
+    }
+
+}
+            
 else if(command == "LOGS"){
 
     if(overseerMode){
@@ -220,7 +258,20 @@ else if(command == "LOGS"){
         "<br>Vault operation began successfully." +
         "<br><br>LOG 002:" +
         "<br>Unknown events detected.";
+if(personalLogs.length > 0){
 
+    output.innerHTML +=
+    "<br><br>PERSONAL OVERSEER LOGS:";
+
+    for(let i = 0; i < personalLogs.length; i++){
+
+        output.innerHTML +=
+        "<br><br>LOG " + (i + 1) + ":" +
+        "<br>" + personalLogs[i];
+
+    }
+
+}
         if(lockdownActive){
 
             output.innerHTML +=
