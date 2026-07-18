@@ -145,6 +145,7 @@ else if(command == "HELP"){
         "CLEAR<br>" +
         "SECURITY<br>" +
         "LOGS<br>" +
+        "WRITELOG<br>" +
         "REACTOR<br>" +
         "LOCKDOWN";
 
