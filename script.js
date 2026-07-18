@@ -115,7 +115,8 @@ function runCommand(){
     return;
 
 }
- if(command == "HELP"){
+        
+else if(command == "HELP"){
 
     if(overseerMode){
 
