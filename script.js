@@ -1,3 +1,7 @@
+let overseerMode = false;
+let waitingForPassword = false;
+let failedAttempts = 0;
+
 function printLine(text, delay) {
 
     setTimeout(function () {
@@ -51,6 +55,65 @@ function runCommand(){
 
     let output = document.getElementById("output");
 
+    if(waitingForPassword){
+
+    if(command == "COLDWAKE"){
+
+        output.innerHTML +=
+        "<br><br>VERIFYING..." +
+        "<br><br>ACCESS GRANTED" +
+        "<br>WELCOME, OVERSEER.";
+
+        overseerMode = true;
+        waitingForPassword = false;
+        failedAttempts = 0;
+
+    }
+
+    else{
+
+        failedAttempts++;
+
+        output.innerHTML +=
+        "<br><br>ACCESS DENIED";
+
+        if(failedAttempts >= 3){
+
+            output.innerHTML +=
+            "<br><br>TERMINAL LOCKED" +
+            "<br>PLEASE WAIT 10 SECONDS...";
+
+            document.getElementById("command").disabled = true;
+            document.getElementById("executeButton").disabled = true;
+
+            setTimeout(function(){
+
+                failedAttempts = 0;
+
+                document.getElementById("command").disabled = false;
+                document.getElementById("executeButton").disabled = false;
+
+                output.innerHTML +=
+                "<br><br>LOCK REMOVED.";
+
+            },10000);
+
+        }
+
+        else{
+
+            output.innerHTML +=
+            "<br>" + (3 - failedAttempts) + " ATTEMPTS REMAINING";
+
+        }
+
+    }
+
+    document.getElementById("command").value = "";
+
+    return;
+
+}
     if(command == "HELP"){
 
         output.innerHTML += 
@@ -71,7 +134,17 @@ function runCommand(){
         "SECURITY: ACTIVE";
 
     }
+        
+else if(command == "OVERSEER"){
 
+    output.innerHTML +=
+    "<br><br>OVERSEER TERMINAL DETECTED" +
+    "<br>ENTER AUTHORIZATION CODE:";
+
+    waitingForPassword = true;
+
+}
+    
     else if(command == "VAULT"){
 
         output.innerHTML +=
