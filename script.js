@@ -152,8 +152,19 @@ function runCommand(){
         "CPU: ONLINE<br>" +
         "MEMORY: OK<br>" +
         "SECURITY: ACTIVE";
+        if(lockdownActive){
 
-    }
+    output.innerHTML +=
+    "<br>VAULT STATUS: LOCKDOWN ACTIVE";
+
+}
+
+else{
+
+    output.innerHTML +=
+    "<br>VAULT STATUS: NORMAL";
+
+}
         
 else if(command == "OVERSEER"){
 
