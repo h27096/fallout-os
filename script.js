@@ -166,6 +166,8 @@ else{
     "<br>VAULT STATUS: NORMAL";
 
 }
+
+    }
         
 else if(command == "OVERSEER"){
 
