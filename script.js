@@ -27,7 +27,7 @@ function boot() {
 
     printLine("LOADING SECURITY..............[OK]", 4200);
 
-    printLine("VERIFYING PIP-BOY CONNECTION", 5000);
+    printLine("VERIFYING PIP-BOY CONNECTION..[OK]", 5000);
 
     printLine("ALL SYSTEMS ONLINE", 5000);
 
