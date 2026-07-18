@@ -50,7 +50,7 @@ function runCommand(){
         output.innerHTML +=
         "<br><br>WELCOME VAULT 111 OVERSEER:<br>" +
         "ALL SYSTEMS FAILED<br>" +
-        "ALL OCUPENTS DEAD<br>" +
+        "ALL OCCUPANTS DEAD<br>" +
         "VAULT DOOR OPEN";
 
     }
