@@ -1,4 +1,4 @@
-let personalLogs = [];
+let personalLogs = JSON.parse(localStorage.getItem("vaultLogs")) || [];
 let writingLog = false;
 let overseerMode = false;
 let waitingForPassword = false;
@@ -118,9 +118,14 @@ function runCommand(){
 
 }
 
-        if(writingLog){
+if(writingLog){
 
     personalLogs.push(command);
+
+    localStorage.setItem(
+        "vaultLogs",
+        JSON.stringify(personalLogs)
+    );
 
     output.innerHTML +=
     "<br><br>LOG SAVED.";
