@@ -376,6 +376,52 @@ if(personalLogs.length > 0){
 
 }
 
+            else if(command.startsWith("OPEN ")){
+
+    let file = command.replace("OPEN ", "");
+
+    if(file == "SECURITY.DAT"){
+
+        output.innerHTML +=
+        "<br><br>SECURITY DATABASE:" +
+        "<br><br>DOOR CONTROL: ONLINE" +
+        "<br>CAMERAS: ACTIVE";
+
+        if(lockdownActive){
+
+            output.innerHTML +=
+            "<br>LOCKDOWN STATUS: ACTIVE";
+
+        }
+
+        else{
+
+            output.innerHTML +=
+            "<br>LOCKDOWN STATUS: NORMAL";
+
+        }
+
+    }
+
+    else if(file == "REACTOR.DAT"){
+
+        output.innerHTML +=
+        "<br><br>REACTOR DATABASE:" +
+        "<br><br>POWER OUTPUT: 98%" +
+        "<br>COOLANT: NORMAL" +
+        "<br>CORE TEMP: STABLE";
+
+    }
+
+    else{
+
+        output.innerHTML +=
+        "<br><br>FILE NOT FOUND.";
+
+    }
+
+}
+
     else if(command == "CLEAR"){
 
         output.innerHTML = "";
