@@ -152,6 +152,7 @@ function runCommand(){
         "CPU: ONLINE<br>" +
         "MEMORY: OK<br>" +
         "SECURITY: ACTIVE";
+      
         if(lockdownActive){
 
     output.innerHTML +=
