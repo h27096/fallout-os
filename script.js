@@ -210,8 +210,7 @@ else if(command == "OVERSEER"){
     }
 
 }
-
-            else if(command == "LOGS"){
+else if(command == "LOGS"){
 
     if(overseerMode){
 
@@ -221,6 +220,15 @@ else if(command == "OVERSEER"){
         "<br>Vault operation began successfully." +
         "<br><br>LOG 002:" +
         "<br>Unknown events detected.";
+
+        if(lockdownActive){
+
+            output.innerHTML +=
+            "<br><br>LOG 003:" +
+            "<br>LOCKDOWN INITIATED BY OVERSEER." +
+            "<br>SECURITY EVENT RECORDED.";
+
+        }
 
     }
 
