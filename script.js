@@ -4,9 +4,9 @@ function boot(){
     "BOOTING FALLOUT OS...<br><br>" +
     "WELCOME VAULT DWELLER.<br><br>" +
     "ROBCO TERMINAL READY.";
+    alert("BOOT FUNCTION WORKED");
 
-    document.getElementById("command").disabled = false;
-
+document.getElementById("command").disabled = false;
 document.getElementById("executeButton").disabled = false;
     
 }
