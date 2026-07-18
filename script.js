@@ -1,6 +1,7 @@
 let overseerMode = false;
 let waitingForPassword = false;
 let failedAttempts = 0;
+let lockdownActive = false;
 
 function printLine(text, delay) {
 
@@ -238,16 +239,18 @@ else if(command == "OVERSEER"){
 
 }
 
-                    else if(command == "LOCKDOWN"){
+                   else if(command == "LOCKDOWN"){
 
     if(overseerMode){
+
+        lockdownActive = true;
 
         output.innerHTML +=
         "<br><br>VAULT SECURITY PROTOCOL INITIATED" +
         "<br><br>WARNING" +
         "<br>ALL DOORS SEALED" +
         "<br>SECURITY SYSTEMS ACTIVE" +
-        "<br>OVERRIDE REQUIRED";
+        "<br>LOCKDOWN STATUS: ACTIVE";
 
     }
 
@@ -259,7 +262,7 @@ else if(command == "OVERSEER"){
     }
 
 }
-
+                       
   else if(command === "81"){
 
     output.innerHTML +=
