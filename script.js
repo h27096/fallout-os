@@ -114,9 +114,26 @@ function runCommand(){
     return;
 
 }
-    if(command == "HELP"){
+ if(command == "HELP"){
 
-        output.innerHTML += 
+    if(overseerMode){
+
+        output.innerHTML +=
+        "<br><br>OVERSEER COMMANDS:<br>" +
+        "HELP<br>" +
+        "STATUS<br>" +
+        "VAULT<br>" +
+        "CLEAR<br>" +
+        "SECURITY<br>" +
+        "LOGS<br>" +
+        "REACTOR<br>" +
+        "LOCKDOWN";
+
+    }
+
+    else{
+
+        output.innerHTML +=
         "<br><br>AVAILABLE COMMANDS:<br>" +
         "HELP<br>" +
         "STATUS<br>" +
@@ -124,6 +141,8 @@ function runCommand(){
         "CLEAR";
 
     }
+
+}
 
     else if(command == "STATUS"){
 
@@ -154,6 +173,70 @@ else if(command == "OVERSEER"){
         "VAULT 88 - HIGHLY CLASSIFIED";
 
     }
+
+        else if(command == "SECURITY"){
+
+    if(overseerMode){
+
+        output.innerHTML +=
+        "<br><br>SECURITY SYSTEMS:" +
+        "<br>DOOR CONTROL: ONLINE" +
+        "<br>CAMERAS: ACTIVE" +
+        "<br>DEFENSE SYSTEMS: STANDBY";
+
+    }
+
+    else{
+
+        output.innerHTML +=
+        "<br><br>ACCESS DENIED.";
+
+    }
+
+}
+
+            else if(command == "LOGS"){
+
+    if(overseerMode){
+
+        output.innerHTML +=
+        "<br><br>OVERSEER LOG DATABASE" +
+        "<br><br>LOG 001:" +
+        "<br>Vault operation began successfully." +
+        "<br><br>LOG 002:" +
+        "<br>Unknown events detected.";
+
+    }
+
+    else{
+
+        output.innerHTML +=
+        "<br><br>ACCESS DENIED.";
+
+    }
+
+}
+
+                else if(command == "REACTOR"){
+
+    if(overseerMode){
+
+        output.innerHTML +=
+        "<br><br>FUSION REACTOR STATUS" +
+        "<br>POWER OUTPUT: 98%" +
+        "<br>COOLANT: NORMAL" +
+        "<br>CORE TEMP: STABLE";
+
+    }
+
+    else{
+
+        output.innerHTML +=
+        "<br><br>ACCESS DENIED.";
+
+    }
+
+}
 
   else if(command === "81"){
 
