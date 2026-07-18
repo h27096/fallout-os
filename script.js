@@ -171,7 +171,7 @@ else if(command == "HELP"){
 
 }
 
-    else if(command == "DIR"){
+else if(command == "DIR"){
 
     output.innerHTML +=
     "<br><br>VAULT FILE DIRECTORY:" +
@@ -179,6 +179,14 @@ else if(command == "HELP"){
     "<br>REACTOR.DAT" +
     "<br>PERSONNEL.DAT" +
     "<br>OVERSEER.LOG";
+
+    if(overseerMode){
+
+        output.innerHTML +=
+        "<br>CLASSIFIED.DAT" +
+        "<br>EXPERIMENTS.DAT";
+
+    }
 
 }
 
