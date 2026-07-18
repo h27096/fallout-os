@@ -169,6 +169,17 @@ else if(command == "HELP"){
 
 }
 
+    else if(command == "DIR"){
+
+    output.innerHTML +=
+    "<br><br>VAULT FILE DIRECTORY:" +
+    "<br><br>SECURITY.DAT" +
+    "<br>REACTOR.DAT" +
+    "<br>PERSONNEL.DAT" +
+    "<br>OVERSEER.LOG";
+
+}
+
     else if(command == "STATUS"){
 
         output.innerHTML +=
