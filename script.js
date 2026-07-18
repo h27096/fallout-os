@@ -238,6 +238,28 @@ else if(command == "OVERSEER"){
 
 }
 
+                    else if(command == "LOCKDOWN"){
+
+    if(overseerMode){
+
+        output.innerHTML +=
+        "<br><br>VAULT SECURITY PROTOCOL INITIATED" +
+        "<br><br>WARNING" +
+        "<br>ALL DOORS SEALED" +
+        "<br>SECURITY SYSTEMS ACTIVE" +
+        "<br>OVERRIDE REQUIRED";
+
+    }
+
+    else{
+
+        output.innerHTML +=
+        "<br><br>ACCESS DENIED.";
+
+    }
+
+}
+
   else if(command === "81"){
 
     output.innerHTML +=
