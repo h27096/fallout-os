@@ -55,6 +55,16 @@ function runCommand(){
 
 }
 
+        else if(command === "2287"){
+
+    output.innerHTML +=
+    "<br><br>WELCOME VAULT 111 OVERSEER:<br>" +
+    "ALL SYSTEMS FAILED<br>" +
+    "ALL OCCUPANTS DEAD<br>" +
+    "VAULT DOOR OPEN";
+
+}
+
     else if(command == "CLEAR"){
 
         output.innerHTML = "";
