@@ -1,14 +1,47 @@
-function boot(){
+function printLine(text, delay) {
 
-    document.getElementById("output").innerHTML =
-    "BOOTING FALLOUT OS...<br><br>" +
-    "WELCOME VAULT DWELLER.<br><br>" +
-    "ROBCO TERMINAL READY.";
-    alert("BOOT FUNCTION WORKED");
+    setTimeout(function () {
 
-document.getElementById("command").disabled = false;
-document.getElementById("executeButton").disabled = false;
-    
+        document.getElementById("output").innerHTML += text + "<br>";
+
+    }, delay);
+
+}
+
+function boot() {
+
+    document.getElementById("output").innerHTML = "";
+
+    document.getElementById("command").disabled = true;
+    document.getElementById("executeButton").disabled = true;
+
+    printLine("ROBCO INDUSTRIES (TM) TERMLINK", 0);
+
+    printLine("", 600);
+
+    printLine("INITIALIZING POWER.............[OK]", 1200);
+
+    printLine("CHECKING MEMORY...............[OK]", 2200);
+
+    printLine("CONNECTING TO VAULT DATABASE..[OK]", 3200);
+
+    printLine("LOADING SECURITY..............[OK]", 4200);
+
+    printLine("VERIFYING PIP-BOY CONNECTION", 5000);
+
+    printLine("ALL SYSTEMS ONLINE", 5000);
+
+    printLine("WELCOME VAULT DWELLER.", 5600);
+
+    printLine("ROBCO TERMINAL READY.", 6400);
+
+    setTimeout(function () {
+
+        document.getElementById("command").disabled = false;
+        document.getElementById("executeButton").disabled = false;
+
+    }, 7000);
+
 }
 
 
