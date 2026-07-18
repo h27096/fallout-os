@@ -45,13 +45,13 @@ function runCommand(){
 
     }
 
-  else if(command === "2287"){
+  else if(command === "81"){
 
     output.innerHTML +=
-    "<br><br>WELCOME VAULT 111 OVERSEER:<br>" +
-    "ALL SYSTEMS FAILED<br>" +
-    "ALL OCCUPANTS DEAD<br>" +
-    "VAULT DOOR OPEN";
+    "<br><br>WELCOME VAULT 81 OVERSEER:<br>" +
+    "ALL SYSTEMS ONLINE<br>" +
+    "ALL OCCUPANTS OK<br>" +
+    "SECRECT VAULT SECTION FOUND";
 
 }
 
