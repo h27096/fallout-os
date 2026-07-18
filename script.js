@@ -5,6 +5,10 @@ function boot(){
     "WELCOME VAULT DWELLER.<br><br>" +
     "ROBCO TERMINAL READY.";
 
+    document.getElementById("command").disabled = false;
+
+document.getElementById("executeButton").disabled = false;
+    
 }
 
 
