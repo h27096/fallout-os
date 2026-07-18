@@ -148,6 +148,7 @@ else if(command == "HELP"){
         "STATUS<br>" +
         "VAULT<br>" +
         "CLEAR<br>" +
+        "DIR<br>" +
         "SECURITY<br>" +
         "LOGS<br>" +
         "WRITELOG<br>" +
@@ -163,6 +164,7 @@ else if(command == "HELP"){
         "HELP<br>" +
         "STATUS<br>" +
         "VAULT<br>" +
+        "DIR<br>" +
         "CLEAR";
 
     }
