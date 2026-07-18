@@ -39,9 +39,9 @@ function runCommand(){
 
         output.innerHTML +=
         "<br><br>VAULT DATABASE:<br>" +
-        "VAULT 101 - OPERATIONAL<br>" +
+        "VAULT 81 - OPERATIONAL<br>" +
         "VAULT 111 - CRYOGENIC LAB<br>" +
-        "VAULT 87 - CLASSIFIED";
+        "VAULT 88 - HIGHLY CLASSIFIED";
 
     }
 
