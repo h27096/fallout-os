@@ -432,6 +432,52 @@ if(personalLogs.length > 0){
 
 }
 
+                else if(file == "CLASSIFIED.DAT"){
+
+    if(overseerMode){
+
+        output.innerHTML +=
+        "<br><br>*** CLASSIFIED FILE ***" +
+        "<br><br>PROJECT: FROST WATCH" +
+        "<br>STATUS: ACTIVE" +
+        "<br>CLEARANCE: OVERSEER" +
+        "<br><br>WARNING:" +
+        "<br>UNAUTHORIZED ACCESS IS PUNISHABLE.";
+
+    }
+
+    else{
+
+        output.innerHTML +=
+        "<br><br>ACCESS DENIED." +
+        "<br>OVERSEER CLEARANCE REQUIRED.";
+
+    }
+
+}
+
+                    else if(file == "EXPERIMENTS.DAT"){
+
+    if(overseerMode){
+
+        output.innerHTML +=
+        "<br><br>EXPERIMENT DATABASE" +
+        "<br><br>SUBJECT COUNT: 124" +
+        "<br>ACTIVE TESTS: 3" +
+        "<br>STATUS: CONFIDENTIAL";
+
+    }
+
+    else{
+
+        output.innerHTML +=
+        "<br><br>ACCESS DENIED." +
+        "<br>OVERSEER CLEARANCE REQUIRED.";
+
+    }
+
+}
+
     else if(command == "CLEAR"){
 
         output.innerHTML = "";
