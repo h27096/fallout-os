@@ -510,7 +510,7 @@ function showHelp(output){
 }
 
 
-function launchbrowser(){
+function launchBrowser(){
 
     let command = document.getElementById("browserCommand").value.toUpperCase();
 
