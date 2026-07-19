@@ -447,6 +447,12 @@ if(personalLogs.length > 0){
 
 }
 
+              else if(command == "BROWSER"){
+
+    launchBrowser(output);
+
+}
+
     else if(command == "CLEAR"){
 
         output.innerHTML = "";
@@ -497,4 +503,20 @@ function showHelp(output){
 
     }
 
+}
+
+
+function launchBrowser(output){
+
+    output.innerHTML =
+    "ROBCO INDUSTRIES VAULTNET BROWSER<br><br>" +
+    "====================================<br><br>" +
+    "ADDRESS: VAULTNET://HOME<br><br>" +
+    "WELCOME TO VAULTNET<br><br>" +
+    "AVAILABLE PAGES:<br>" +
+    "- VAULTNET://HOME<br>" +
+    "- VAULTNET://PERSONNEL<br>" +
+    "- VAULTNET://LOGS<br>" +
+    "- VAULTNET://REACTOR<br><br>" +
+    "TYPE: GO VAULTNET://HOME";
 }
