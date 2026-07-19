@@ -508,17 +508,10 @@ function showHelp(output){
 }
 
 
-function launchBrowser(output){
+function launchBrowser(){
 
-    output.innerHTML =
-    "ROBCO INDUSTRIES VAULTNET BROWSER<br><br>" +
-    "====================================<br><br>" +
-    "ADDRESS: VAULTNET://HOME<br><br>" +
-    "WELCOME TO VAULTNET<br><br>" +
-    "AVAILABLE PAGES:<br>" +
-    "- VAULTNET://HOME<br>" +
-    "- VAULTNET://PERSONNEL<br>" +
-    "- VAULTNET://LOGS<br>" +
-    "- VAULTNET://REACTOR<br><br>" +
-    "TYPE: GO VAULTNET://HOME";
+    document.getElementById("terminalScreen").style.display = "none";
+
+    document.getElementById("browserScreen").style.display = "block";
+
 }
