@@ -465,6 +465,7 @@ if(personalLogs.length > 0){
         "<br>OVERSEER CLEARANCE REQUIRED.";
 
     }
+    }
 
                         else if(file == "PERSONNEL.DAT"){
 
