@@ -486,7 +486,7 @@ function showHelp(output){
         "SECURITY<br>" +
         "REACTOR<br>" +
         "LOCKDOWN<br>" +
-        "BROWSER"<br>" +
+        "BROWSER<br>" +
         "CLEAR";
 
     }
@@ -500,7 +500,7 @@ function showHelp(output){
         "VAULT<br>" +
         "DIR<br>" +
         "OPEN<br>" +
-        "BROWSER"<br>" +
+        "BROWSER<br>" +
         "CLEAR";
 
     }
