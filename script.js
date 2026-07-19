@@ -26,7 +26,7 @@ function boot() {
 
     printLine("", 600);
 
-    printLine("INITIALIZING POWER.............[OK]", 1200);
+    printLine("INITIALIZING POWER............[OK]", 1200);
 
     printLine("CHECKING MEMORY...............[OK]", 2200);
 
