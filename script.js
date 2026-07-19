@@ -509,8 +509,15 @@ function showHelp(output){
 
 }
 
-
 function launchBrowser(){
+
+    document.getElementById("terminalScreen").style.display = "none";
+
+    document.getElementById("browserScreen").style.display = "block";
+
+}
+
+function BrowserCommand(){
 
     let command = document.getElementById("browserCommand").value.toUpperCase();
 
