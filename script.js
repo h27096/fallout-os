@@ -60,7 +60,7 @@ function runCommand(){
 
     if(waitingForPassword){
 
-    if(command == "COLDWAKE"){
+    if(command == "password1234"){
 
         output.innerHTML +=
         "<br><br>VERIFYING..." +
