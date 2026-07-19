@@ -177,17 +177,16 @@ else if(command == "DIR"){
     "<br><br>VAULT FILE DIRECTORY:" +
     "<br><br>SECURITY.DAT" +
     "<br>REACTOR.DAT" +
-    "<br>PERSONNEL.DAT" +
     "<br>OVERSEER.LOG";
 
-    if(overseerMode){
+  if(overseerMode){
 
-        output.innerHTML +=
-        "<br>CLASSIFIED.DAT" +
-        "<br>EXPERIMENTS.DAT";
+    output.innerHTML +=
+    "<br>CLASSIFIED.DAT" +
+    "<br>EXPERIMENTS.DAT" +
+    "<br>PERSONNEL.DAT";
 
-    }
-
+}
 }
 
     else if(command == "STATUS"){
@@ -466,6 +465,21 @@ if(personalLogs.length > 0){
         "<br>OVERSEER CLEARANCE REQUIRED.";
 
     }
+
+                        else if(file == "PERSONNEL.DAT"){
+
+    output.innerHTML +=
+    "<br><br>VAULT PERSONNEL DATABASE" +
+    "<br><br>ID 001: NATE" +
+    "<br>STATUS: UNKNOWN" +
+    "<br><br>ID 002: NORA" +
+    "<br>STATUS: DECEASED" +
+    "<br><br>ID 003: SHAUN" +
+    "<br>STATUS: CLASSIFIED" +
+    "<br><br>ID 004: SECURITY CHIEF" +
+    "<br>STATUS: ACTIVE";
+
+}
 
 }
 
