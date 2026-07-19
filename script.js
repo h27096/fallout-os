@@ -140,34 +140,7 @@ if(writingLog){
         
 else if(command == "HELP"){
 
-    if(overseerMode){
-
-        output.innerHTML +=
-        "<br><br>OVERSEER COMMANDS:<br>" +
-        "HELP<br>" +
-        "STATUS<br>" +
-        "VAULT<br>" +
-        "CLEAR<br>" +
-        "DIR<br>" +
-        "SECURITY<br>" +
-        "LOGS<br>" +
-        "WRITELOG<br>" +
-        "REACTOR<br>" +
-        "LOCKDOWN";
-
-    }
-
-    else{
-
-        output.innerHTML +=
-        "<br><br>AVAILABLE COMMANDS:<br>" +
-        "HELP<br>" +
-        "STATUS<br>" +
-        "VAULT<br>" +
-        "DIR<br>" +
-        "CLEAR";
-
-    }
+    showHelp(output);
 
 }
 
@@ -488,5 +461,40 @@ if(personalLogs.length > 0){
     }
 
     document.getElementById("command").value="";
+
+}
+
+function showHelp(output){
+
+    if(overseerMode){
+
+        output.innerHTML +=
+        "<br><br>OVERSEER COMMANDS:<br>" +
+        "HELP<br>" +
+        "STATUS<br>" +
+        "VAULT<br>" +
+        "DIR<br>" +
+        "OPEN<br>" +
+        "LOGS<br>" +
+        "WRITELOG<br>" +
+        "SECURITY<br>" +
+        "REACTOR<br>" +
+        "LOCKDOWN<br>" +
+        "CLEAR";
+
+    }
+
+    else{
+
+        output.innerHTML +=
+        "<br><br>AVAILABLE COMMANDS:<br>" +
+        "HELP<br>" +
+        "STATUS<br>" +
+        "VAULT<br>" +
+        "DIR<br>" +
+        "OPEN<br>" +
+        "CLEAR";
+
+    }
 
 }
