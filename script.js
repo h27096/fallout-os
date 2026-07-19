@@ -449,8 +449,6 @@ if(personalLogs.length > 0){
 
               else if(command == "BROWSER"){
 
-                  alert("BROWSER COMMAND FOUND");
-
     launchBrowser();
 
 }
