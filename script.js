@@ -508,10 +508,42 @@ function showHelp(output){
 }
 
 
-function launchBrowser(){
+function browserCommand(){
 
-    document.getElementById("terminalScreen").style.display = "none";
+    let command = document.getElementById("browserCommand").value.toUpperCase();
 
-    document.getElementById("browserScreen").style.display = "block";
+    let browserOutput = document.getElementById("browserOutput");
+
+
+    if(command == "HOME"){
+
+        browserOutput.innerHTML =
+        "ROBCO VAULTNET HOME<br><br>" +
+        "AVAILABLE LOCATIONS:<br>" +
+        "VAULTNET://PERSONNEL<br>" +
+        "VAULTNET://REACTOR<br>" +
+        "VAULTNET://LOGS";
+
+    }
+
+
+    else if(command == "EXIT"){
+
+        document.getElementById("browserScreen").style.display = "none";
+
+        document.getElementById("terminalScreen").style.display = "block";
+
+    }
+
+
+    else{
+
+        browserOutput.innerHTML +=
+        "<br><br>PAGE NOT FOUND.";
+
+    }
+
+
+    document.getElementById("browserCommand").value = "";
 
 }
