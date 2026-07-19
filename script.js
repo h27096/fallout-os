@@ -508,7 +508,7 @@ function showHelp(output){
 }
 
 
-function launchCommand(){
+function launchbrowser(){
 
     let command = document.getElementById("browserCommand").value.toUpperCase();
 
