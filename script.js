@@ -449,7 +449,7 @@ if(personalLogs.length > 0){
 
               else if(command == "BROWSER"){
 
-    launchBrowser(output);
+    launchBrowser();
 
 }
 
