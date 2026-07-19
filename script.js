@@ -385,7 +385,7 @@ if(personalLogs.length > 0){
 
 }
 
-            else if(command.startsWith("OPEN ")){
+          else if(command.startsWith("OPEN ")){
 
     let file = command.replace("OPEN ", "");
 
@@ -395,20 +395,6 @@ if(personalLogs.length > 0){
         "<br><br>SECURITY DATABASE:" +
         "<br><br>DOOR CONTROL: ONLINE" +
         "<br>CAMERAS: ACTIVE";
-
-        if(lockdownActive){
-
-            output.innerHTML +=
-            "<br>LOCKDOWN STATUS: ACTIVE";
-
-        }
-
-        else{
-
-            output.innerHTML +=
-            "<br>LOCKDOWN STATUS: NORMAL";
-
-        }
 
     }
 
@@ -422,68 +408,62 @@ if(personalLogs.length > 0){
 
     }
 
-                       else if(file == "CLASSIFIED.DAT"){
+    else if(file == "CLASSIFIED.DAT"){
 
-    if(overseerMode){
+        if(overseerMode){
+
+            output.innerHTML +=
+            "<br><br>*** CLASSIFIED FILE ***" +
+            "<br><br>PROJECT: FROST WATCH" +
+            "<br>STATUS: ACTIVE" +
+            "<br>CLEARANCE: OVERSEER";
+
+        }
+
+        else{
+
+            output.innerHTML +=
+            "<br><br>ACCESS DENIED.";
+
+        }
+
+    }
+
+    else if(file == "EXPERIMENTS.DAT"){
+
+        if(overseerMode){
+
+            output.innerHTML +=
+            "<br><br>EXPERIMENT DATABASE" +
+            "<br><br>SUBJECT COUNT: 124" +
+            "<br>ACTIVE TESTS: 3" +
+            "<br>STATUS: CONFIDENTIAL";
+
+        }
+
+        else{
+
+            output.innerHTML +=
+            "<br><br>ACCESS DENIED.";
+
+        }
+
+    }
+
+    else if(file == "PERSONNEL.DAT"){
 
         output.innerHTML +=
-        "<br><br>*** CLASSIFIED FILE ***" +
-        "<br><br>PROJECT: FROST WATCH" +
-        "<br>STATUS: ACTIVE" +
-        "<br>CLEARANCE: OVERSEER" +
-        "<br><br>WARNING:" +
-        "<br>UNAUTHORIZED ACCESS IS PUNISHABLE.";
+        "<br><br>VAULT PERSONNEL DATABASE" +
+        "<br><br>ID 001: NATE" +
+        "<br>STATUS: UNKNOWN" +
+        "<br><br>ID 002: NORA" +
+        "<br>STATUS: DECEASED" +
+        "<br><br>ID 003: SHAUN" +
+        "<br>STATUS: CLASSIFIED" +
+        "<br><br>ID 004: SECURITY CHIEF" +
+        "<br>STATUS: ACTIVE";
 
     }
-
-    else{
-
-        output.innerHTML +=
-        "<br><br>ACCESS DENIED." +
-        "<br>OVERSEER CLEARANCE REQUIRED.";
-
-    }
-
-}
-
-                    else if(file == "EXPERIMENTS.DAT"){
-
-    if(overseerMode){
-
-        output.innerHTML +=
-        "<br><br>EXPERIMENT DATABASE" +
-        "<br><br>SUBJECT COUNT: 124" +
-        "<br>ACTIVE TESTS: 3" +
-        "<br>STATUS: CONFIDENTIAL";
-
-    }
-
-    else{
-
-        output.innerHTML +=
-        "<br><br>ACCESS DENIED." +
-        "<br>OVERSEER CLEARANCE REQUIRED.";
-
-    }
-    }
-
-                        else if(file == "PERSONNEL.DAT"){
-
-    output.innerHTML +=
-    "<br><br>VAULT PERSONNEL DATABASE" +
-    "<br><br>ID 001: NATE" +
-    "<br>STATUS: UNKNOWN" +
-    "<br><br>ID 002: NORA" +
-    "<br>STATUS: DECEASED" +
-    "<br><br>ID 003: SHAUN" +
-    "<br>STATUS: CLASSIFIED" +
-    "<br><br>ID 004: SECURITY CHIEF" +
-    "<br>STATUS: ACTIVE";
-
-}
-
-}
-
 
     else{
 
