@@ -222,6 +222,8 @@ else if(command == "OVERSEER"){
 
     waitingForPassword = true;
 
+    console.log("Waiting for password:", waitingForPassword);
+
 }
     
     else if(command == "VAULT"){
