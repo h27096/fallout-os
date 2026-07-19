@@ -423,16 +423,7 @@ if(personalLogs.length > 0){
 
     }
 
-    else{
-
-        output.innerHTML +=
-        "<br><br>FILE NOT FOUND.";
-
-    }
-
-}
-
-                else if(file == "CLASSIFIED.DAT"){
+                       else if(file == "CLASSIFIED.DAT"){
 
     if(overseerMode){
 
@@ -473,6 +464,16 @@ if(personalLogs.length > 0){
         output.innerHTML +=
         "<br><br>ACCESS DENIED." +
         "<br>OVERSEER CLEARANCE REQUIRED.";
+
+    }
+
+}
+
+
+    else{
+
+        output.innerHTML +=
+        "<br><br>FILE NOT FOUND.";
 
     }
 
