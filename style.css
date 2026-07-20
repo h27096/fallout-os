@@ -68,13 +68,11 @@ body {
     width: 400px;
     height: 180px;
 
-    background-color: black;
+    background: black;
 
     border: 2px solid #33ff33;
 
     padding: 10px;
-
-    overflow: auto;
 
 }
 
