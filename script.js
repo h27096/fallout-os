@@ -570,3 +570,25 @@ function openDesktop(){
     document.getElementById("desktopScreen").style.display = "block";
 
 }
+
+function openBrowser(){
+
+    document.getElementById("browserWindow").style.display = "block";
+
+}
+
+function closeBrowser(){
+
+    document.getElementById("browserWindow").style.display = "none";
+
+}
+
+function openDesktop(){
+
+    document.getElementById("startupScreen").style.display = "none";
+
+    document.getElementById("bootScreen").style.display = "none";
+
+    document.getElementById("desktopScreen").style.display = "block";
+
+}
