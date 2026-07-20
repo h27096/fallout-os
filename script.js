@@ -515,7 +515,7 @@ function launchBrowser(){
 
 }
 
-function BrowserCommand(){
+function browserCommand(){
 
     let command = document.getElementById("browserCommand").value.toUpperCase();
 
