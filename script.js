@@ -17,6 +17,10 @@ function printLine(text, delay) {
 
 function boot() {
 
+    document.getElementById("startupScreen").style.display = "none";
+
+    document.getElementById("terminalScreen").style.display = "block";
+
     document.getElementById("output").innerHTML = "";
 
     document.getElementById("command").disabled = true;
