@@ -559,8 +559,6 @@ function browserCommand(){
 
 function openDesktop(){
 
-    document.getElementById("terminalScreen").style.display = "none";
-
     document.getElementById("desktopScreen").style.display = "block";
 
 }
