@@ -21,7 +21,7 @@ function boot() {
 
     document.getElementById("terminalScreen").style.display = "block";
 
-    document.getElementById("output").innerHTML = "";
+    document.getElementById("bootOutput").innerHTML = "";
 
     document.getElementById("command").disabled = true;
     document.getElementById("executeButton").disabled = true;
@@ -46,14 +46,18 @@ function boot() {
 
     printLine("ROBCO TERMINAL READY.", 6400);
 
-   setTimeout(function () {
+    setTimeout(function(){
+
+    document.getElementById("bootScreen").style.display = "none";
+
+    document.getElementById("desktopScreen").style.display = "block";
+
+    document.getElementById("terminalScreen").style.display = "block";
 
     document.getElementById("command").disabled = false;
     document.getElementById("executeButton").disabled = false;
 
-    openDesktop();
-
-}, 7000);
+},7000);
 
 }
 
