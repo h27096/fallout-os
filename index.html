@@ -7,15 +7,121 @@
 
 <body>
 
-    <div id="startupScreen">
+  <div id="startupScreen">
 
-<h1>FALLOUT OS</h1>
+    <h1>FALLOUT OS</h1>
 
-<p>ROBCO INDUSTRIES UNIFIED OPERATING SYSTEM</p>
+    <p>ROBCO INDUSTRIES UNIFIED OPERATING SYSTEM</p>
 
-<button onclick="boot()">START SYSTEM</button>
+    <button onclick="boot()">
+        START SYSTEM
+    </button>
 
 </div>
+
+
+
+<div id="bootScreen" style="display:none;">
+
+    <div id="bootOutput"></div>
+
+</div>
+
+
+
+<div id="desktopScreen" style="display:none;">
+
+    <div id="topBar">
+
+        ROBCO INDUSTRIES
+
+    </div>
+
+
+
+    <div id="desktopIcons">
+
+        <button onclick="openBrowser()">
+            VAULTNET
+        </button>
+
+        <button>
+            SECURITY
+        </button>
+
+        <button>
+            REACTOR
+        </button>
+
+        <button>
+            PERSONNEL
+        </button>
+
+        <button>
+            LOGS
+        </button>
+
+        <button>
+            SETTINGS
+        </button>
+
+    </div>
+
+
+
+    <div id="terminalWindow">
+
+        <div id="screen">
+
+            <span id="output"></span><span id="cursor">_</span>
+
+        </div>
+
+        <br>
+
+        <input id="command" disabled>
+
+        <button id="executeButton" onclick="runCommand()" disabled>
+
+            EXECUTE
+
+        </button>
+
+    </div>
+
+</div>
+
+
+
+<div id="browserWindow" style="display:none;">
+
+    <h2>ROBCO VAULTNET</h2>
+
+    <div id="browserOutput">
+
+        WELCOME TO VAULTNET
+
+    </div>
+
+    <br>
+
+    <input id="browserCommand">
+
+    <button onclick="browserCommand()">
+
+        GO
+
+    </button>
+
+    <button onclick="closeBrowser()">
+
+        CLOSE
+
+    </button>
+
+</div>
+
+<script src="script.js"></script>
 
 <div id="bootScreen">
 
