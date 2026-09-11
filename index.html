@@ -51,5 +51,73 @@
 </div>
 
 <script src="script.js"></script>
+
+<script>
+// Foundation compatibility fixes for the current v0.1 UI.
+// Keeps the existing command system while synchronizing it with the HTML screens.
+function boot() {
+    document.getElementById("startupScreen").style.display = "none";
+    document.getElementById("desktopScreen").style.display = "none";
+    document.getElementById("browserWindow").style.display = "none";
+    document.getElementById("bootScreen").style.display = "block";
+    document.getElementById("bootOutput").innerHTML = "";
+    document.getElementById("command").disabled = true;
+    document.getElementById("executeButton").disabled = true;
+
+    const lines = [
+        ["ROBCO INDUSTRIES (TM) TERMLINK", 0],
+        ["", 600],
+        ["INITIALIZING POWER............[OK]", 1200],
+        ["CHECKING MEMORY...............[OK]", 2200],
+        ["CONNECTING TO VAULT DATABASE..[OK]", 3200],
+        ["LOADING SECURITY..............[OK]", 4200],
+        ["VERIFYING PIP-BOY CONNECTION..[OK]", 5000],
+        ["ALL SYSTEMS ONLINE", 5400],
+        ["WELCOME VAULT DWELLER.", 6000],
+        ["ROBCO TERMINAL READY.", 6600]
+    ];
+
+    lines.forEach(function(item) {
+        setTimeout(function() {
+            document.getElementById("bootOutput").innerHTML += item[0] + "<br>";
+        }, item[1]);
+    });
+
+    setTimeout(function() {
+        document.getElementById("bootScreen").style.display = "none";
+        document.getElementById("desktopScreen").style.display = "block";
+        document.getElementById("command").disabled = false;
+        document.getElementById("executeButton").disabled = false;
+        document.getElementById("command").focus();
+    }, 7000);
+}
+
+function launchBrowser() {
+    document.getElementById("browserWindow").style.display = "block";
+    document.getElementById("browserCommand").focus();
+}
+
+function browserCommand() {
+    const command = document.getElementById("browserCommand").value.toUpperCase().trim();
+    const browserOutput = document.getElementById("browserOutput");
+
+    if (command === "HOME") {
+        browserOutput.innerHTML =
+            "ROBCO VAULTNET HOME<br><br>" +
+            "AVAILABLE LOCATIONS:<br>" +
+            "VAULTNET://PERSONNEL<br>" +
+            "VAULTNET://REACTOR<br>" +
+            "VAULTNET://LOGS";
+    } else if (command === "EXIT") {
+        document.getElementById("browserWindow").style.display = "none";
+        document.getElementById("command").focus();
+    } else if (command !== "") {
+        browserOutput.innerHTML += "<br><br>PAGE NOT FOUND.";
+    }
+
+    document.getElementById("browserCommand").value = "";
+}
+</script>
+
 </body>
 </html>
