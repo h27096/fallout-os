@@ -7,117 +7,56 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-<div id="startupScreen">
-    <h1>FALLOUT OS</h1>
-    <p>ROBCO INDUSTRIES UNIFIED OPERATING SYSTEM</p>
-    <button onclick="boot()">START SYSTEM</button>
-</div>
-
-<div id="bootScreen" style="display:none;">
-    <pre id="bootOutput"></pre>
-</div>
-
-<div id="desktopScreen" style="display:none;">
-    <div id="topBar">ROBCO INDUSTRIES</div>
-
-    <div id="desktopIcons">
-        <button onclick="openBrowser()">VAULTNET</button>
-        <button>SECURITY</button>
-        <button>REACTOR</button>
-        <button>PERSONNEL</button>
-        <button>LOGS</button>
-        <button>SETTINGS</button>
+    <div id="startupScreen">
+        <h1>FALLOUT OS</h1>
+        <p>ROBCO INDUSTRIES UNIFIED OPERATING SYSTEM</p>
+        <button type="button" onclick="boot()">START SYSTEM</button>
     </div>
 
-    <div id="terminalWindow">
-        <div id="screen">
-            <span id="output"></span><span id="cursor">_</span>
+    <div id="bootScreen" style="display:none;"><pre id="bootOutput"></pre></div>
+
+    <main id="desktopScreen" style="display:none;">
+        <header id="topBar">ROBCO INDUSTRIES <span>TERMLINK // VAULT-TEC NETWORK</span></header>
+        <nav id="desktopIcons" aria-label="Desktop applications">
+            <button type="button" onclick="openBrowser()">VAULTNET</button>
+            <button type="button">SECURITY</button><button type="button">REACTOR</button>
+            <button type="button">PERSONNEL</button><button type="button">LOGS</button><button type="button">SETTINGS</button>
+        </nav>
+        <section id="terminalWindow" aria-label="RobCo terminal">
+            <div id="screen"><span id="output"></span><span id="cursor">_</span></div>
+            <div id="commandRow">
+                <input id="command" aria-label="Terminal command" autocomplete="off" disabled>
+                <button id="executeButton" type="button" onclick="runCommand()" disabled>EXECUTE</button>
+            </div>
+        </section>
+    </main>
+
+    <section id="browserWindow" style="display:none;" aria-label="VaultNet browser">
+        <header id="browserTitleBar">
+            <div><strong>ROBCO VAULTNET</strong><span>INFORMATION ACCESS TERMINAL</span></div>
+            <button type="button" class="windowClose" onclick="closeBrowser()" aria-label="Close VaultNet">CLOSE</button>
+        </header>
+        <div id="browserControls" role="toolbar" aria-label="Browser navigation">
+            <button id="backButton" type="button" onclick="browserBack()" title="Back">◀ BACK</button>
+            <button id="forwardButton" type="button" onclick="browserForward()" title="Forward">FORWARD ▶</button>
+            <button type="button" onclick="browserReload()" title="Reload">↻ RELOAD</button>
+            <button type="button" onclick="browserHome()" title="Home">⌂ HOME</button>
+            <form id="addressForm">
+                <input id="browserAddress" type="text" inputmode="url" autocomplete="off" spellcheck="false" aria-label="Web address or search" placeholder="ENTER ADDRESS OR SEARCH VAULTNET">
+                <button type="submit">GO</button>
+            </form>
         </div>
-
-        <div id="commandRow">
-            <input id="command" autocomplete="off" disabled>
-            <button id="executeButton" onclick="runCommand()" disabled>EXECUTE</button>
+        <div id="browserStatus" role="status">VAULTNET READY. ENTER A WEB ADDRESS OR SEARCH TERM.</div>
+        <div id="browserViewport">
+            <iframe id="browserFrame" title="VaultNet web content" sandbox="allow-forms allow-modals allow-popups allow-scripts allow-same-origin"></iframe>
+            <div id="browserFallback" hidden>
+                <strong>DISPLAY CHECK</strong>
+                <span>Is the page blank or blocked? This site may prevent embedded access.</span>
+                <button id="openExternalButton" type="button">OPEN IN NEW TAB</button>
+            </div>
         </div>
-    </div>
-</div>
-
-<div id="browserWindow" style="display:none;">
-    <h2>ROBCO VAULTNET</h2>
-    <div id="browserOutput">WELCOME TO VAULTNET</div>
-    <input id="browserCommand" autocomplete="off">
-    <button onclick="browserCommand()">GO</button>
-    <button onclick="closeBrowser()">CLOSE</button>
-</div>
-
-<script src="script.js"></script>
-
-<script>
-// Foundation compatibility fixes for the current v0.1 UI.
-// Keeps the existing command system while synchronizing it with the HTML screens.
-function boot() {
-    document.getElementById("startupScreen").style.display = "none";
-    document.getElementById("desktopScreen").style.display = "none";
-    document.getElementById("browserWindow").style.display = "none";
-    document.getElementById("bootScreen").style.display = "block";
-    document.getElementById("bootOutput").innerHTML = "";
-    document.getElementById("command").disabled = true;
-    document.getElementById("executeButton").disabled = true;
-
-    const lines = [
-        ["ROBCO INDUSTRIES (TM) TERMLINK", 0],
-        ["", 600],
-        ["INITIALIZING POWER............[OK]", 1200],
-        ["CHECKING MEMORY...............[OK]", 2200],
-        ["CONNECTING TO VAULT DATABASE..[OK]", 3200],
-        ["LOADING SECURITY..............[OK]", 4200],
-        ["VERIFYING PIP-BOY CONNECTION..[OK]", 5000],
-        ["ALL SYSTEMS ONLINE", 5400],
-        ["WELCOME VAULT DWELLER.", 6000],
-        ["ROBCO TERMINAL READY.", 6600]
-    ];
-
-    lines.forEach(function(item) {
-        setTimeout(function() {
-            document.getElementById("bootOutput").innerHTML += item[0] + "<br>";
-        }, item[1]);
-    });
-
-    setTimeout(function() {
-        document.getElementById("bootScreen").style.display = "none";
-        document.getElementById("desktopScreen").style.display = "block";
-        document.getElementById("command").disabled = false;
-        document.getElementById("executeButton").disabled = false;
-        document.getElementById("command").focus();
-    }, 7000);
-}
-
-function launchBrowser() {
-    document.getElementById("browserWindow").style.display = "block";
-    document.getElementById("browserCommand").focus();
-}
-
-function browserCommand() {
-    const command = document.getElementById("browserCommand").value.toUpperCase().trim();
-    const browserOutput = document.getElementById("browserOutput");
-
-    if (command === "HOME") {
-        browserOutput.innerHTML =
-            "ROBCO VAULTNET HOME<br><br>" +
-            "AVAILABLE LOCATIONS:<br>" +
-            "VAULTNET://PERSONNEL<br>" +
-            "VAULTNET://REACTOR<br>" +
-            "VAULTNET://LOGS";
-    } else if (command === "EXIT") {
-        document.getElementById("browserWindow").style.display = "none";
-        document.getElementById("command").focus();
-    } else if (command !== "") {
-        browserOutput.innerHTML += "<br><br>PAGE NOT FOUND.";
-    }
-
-    document.getElementById("browserCommand").value = "";
-}
-</script>
-
+        <p id="browserNotice">Some websites prevent any browser from embedding them. If a page does not load, use <em>OPEN IN NEW TAB</em>.</p>
+    </section>
+    <script src="script.js"></script>
 </body>
 </html>
