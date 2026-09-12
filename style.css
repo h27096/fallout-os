@@ -113,26 +113,27 @@ input:disabled {
     box-sizing: border-box;
 }
 
-#browserWindow {
-    position: fixed;
-    inset: 10%;
-    z-index: 10;
-    border: 2px solid #33ff33;
-    background: #050505;
-    padding: 20px;
-    overflow: auto;
-    box-sizing: border-box;
-}
 
-#browserOutput {
-    border: 1px solid #33ff33;
-    padding: 15px;
-    min-height: 120px;
-    margin-bottom: 15px;
+#browserWindow { position: fixed; inset: 5%; z-index: 10; border: 2px solid #33ff33; background: #050b05; box-shadow: 0 0 28px #33ff3333; box-sizing: border-box; flex-direction: column; overflow: auto; }
+#browserTitleBar { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 14px; background: #112811; border-bottom: 1px solid #33ff33; }
+#browserTitleBar strong { letter-spacing: 2px; }
+#browserTitleBar small { display: block; margin-top: 6px; }
+#browserControls { display: flex; flex-wrap: wrap; gap: 8px; padding: 12px 12px 0; }
+#addressForm { display: flex; gap: 8px; align-items: center; padding: 12px; }
+#browserAddress { flex: 1; min-width: 0; }
+#browserStatus { padding: 0 12px; margin: 0 0 12px; overflow-wrap: anywhere; }
+#browserViewport { flex: 1; min-height: 150px; position: relative; border-block: 1px solid #33ff33; }
+#browserFrame { width: 100%; height: 100%; position: absolute; inset: 0; border: 0; background: white; }
+#browserHome { padding: 24px; height: 100%; box-sizing: border-box; overflow: auto; line-height: 1.6; }
+#browserFallback { padding: 12px; font-size: 13px; line-height: 1.5; }
+#openExternal { color: #33ff33; display: inline-block; margin-top: 8px; padding: 6px; border: 1px solid; }
+[hidden] { display: none !important; }
+button:focus-visible, input:focus-visible, a:focus-visible { outline: 2px solid #b0ffb0; outline-offset: 3px; }
+#command { min-width: 0; }
+@media (max-width: 600px) {
+    #browserWindow { inset: 8px; }
+    #browserTitleBar small { font-size: 10px; }
+    #addressForm label { display: none; }
+    #browserHome { padding: 14px; }
 }
-
-@keyframes blink {
-    50% {
-        opacity: 0;
-    }
-}
+@keyframes blink { 50% { opacity: 0; } }

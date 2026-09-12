@@ -5,62 +5,42 @@ let waitingForPassword = false;
 let failedAttempts = 0;
 let lockdownActive = false;
 
-function printLine(text, delay) {
-
-    setTimeout(function () {
-
-        document.getElementById("output").innerHTML += text + "<br>";
-
-    }, delay);
-
-}
-
 function boot() {
-
     document.getElementById("startupScreen").style.display = "none";
-
-    document.getElementById("terminalScreen").style.display = "block";
-
+    document.getElementById("desktopScreen").style.display = "none";
+    document.getElementById("browserWindow").style.display = "none";
+    document.getElementById("bootScreen").style.display = "block";
     document.getElementById("bootOutput").innerHTML = "";
-
     document.getElementById("command").disabled = true;
     document.getElementById("executeButton").disabled = true;
 
-    printLine("ROBCO INDUSTRIES (TM) TERMLINK", 0);
+    const lines = [
+        ["ROBCO INDUSTRIES (TM) TERMLINK", 0],
+        ["", 600],
+        ["INITIALIZING POWER............[OK]", 1200],
+        ["CHECKING MEMORY...............[OK]", 2200],
+        ["CONNECTING TO VAULT DATABASE..[OK]", 3200],
+        ["LOADING SECURITY..............[OK]", 4200],
+        ["VERIFYING PIP-BOY CONNECTION..[OK]", 5000],
+        ["ALL SYSTEMS ONLINE", 5400],
+        ["WELCOME VAULT DWELLER.", 6000],
+        ["ROBCO TERMINAL READY.", 6600]
+    ];
 
-    printLine("", 600);
+    lines.forEach(function(item) {
+        setTimeout(function() {
+            document.getElementById("bootOutput").innerHTML += item[0] + "<br>";
+        }, item[1]);
+    });
 
-    printLine("INITIALIZING POWER............[OK]", 1200);
-
-    printLine("CHECKING MEMORY...............[OK]", 2200);
-
-    printLine("CONNECTING TO VAULT DATABASE..[OK]", 3200);
-
-    printLine("LOADING SECURITY..............[OK]", 4200);
-
-    printLine("VERIFYING PIP-BOY CONNECTION..[OK]", 5000);
-
-    printLine("ALL SYSTEMS ONLINE", 5000);
-
-    printLine("WELCOME VAULT DWELLER.", 5600);
-
-    printLine("ROBCO TERMINAL READY.", 6400);
-
-    setTimeout(function(){
-
-    document.getElementById("bootScreen").style.display = "none";
-
-    document.getElementById("desktopScreen").style.display = "block";
-
-    document.getElementById("terminalScreen").style.display = "block";
-
-    document.getElementById("command").disabled = false;
-    document.getElementById("executeButton").disabled = false;
-
-},7000);
-
+    setTimeout(function() {
+        document.getElementById("bootScreen").style.display = "none";
+        document.getElementById("desktopScreen").style.display = "block";
+        document.getElementById("command").disabled = false;
+        document.getElementById("executeButton").disabled = false;
+        document.getElementById("command").focus();
+    }, 7000);
 }
-
 
 function runCommand(){
 
@@ -517,78 +497,94 @@ function showHelp(output){
 
 }
 
-function launchBrowser(){
 
-    document.getElementById("terminalScreen").style.display = "none";
-
-    document.getElementById("browserScreen").style.display = "block";
-
+const browserHistory = ["vaultnet://home"];
+let browserHistoryIndex = 0;
+let browserTimer;
+let browserReturnFocus;
+function launchBrowser() { openBrowser(); }
+function openBrowser() {
+    browserReturnFocus = document.activeElement;
+    document.getElementById("browserWindow").style.display = "flex";
+    if (!document.getElementById("browserAddress").value) renderBrowser();
+    document.getElementById("browserAddress").focus();
 }
-
-function browserCommand(){
-
-    let command = document.getElementById("browserCommand").value.toUpperCase();
-
-    let browserOutput = document.getElementById("browserOutput");
-
-
-    if(command == "HOME"){
-
-        browserOutput.innerHTML =
-        "ROBCO VAULTNET HOME<br><br>" +
-        "AVAILABLE LOCATIONS:<br>" +
-        "VAULTNET://PERSONNEL<br>" +
-        "VAULTNET://REACTOR<br>" +
-        "VAULTNET://LOGS";
-
-    }
-
-
-    else if(command == "EXIT"){
-
-        document.getElementById("browserScreen").style.display = "none";
-
-        document.getElementById("terminalScreen").style.display = "block";
-
-    }
-
-
-    else{
-
-        browserOutput.innerHTML +=
-        "<br><br>PAGE NOT FOUND.";
-
-    }
-
-
-    document.getElementById("browserCommand").value = "";
-
-}
-
-function openDesktop(){
-
-    document.getElementById("desktopScreen").style.display = "block";
-
-}
-
-function openBrowser(){
-
-    document.getElementById("browserWindow").style.display = "block";
-
-}
-
-function closeBrowser(){
-
+function closeBrowser() {
     document.getElementById("browserWindow").style.display = "none";
-
+    if (browserReturnFocus && !browserReturnFocus.disabled) browserReturnFocus.focus();
+    else document.getElementById("command").focus();
 }
-
-function openDesktop(){
-
-    document.getElementById("startupScreen").style.display = "none";
-
-    document.getElementById("bootScreen").style.display = "none";
-
-    document.getElementById("desktopScreen").style.display = "block";
-
+function browserNavigate(value) {
+    const address = value.trim();
+    if (/^(home|vaultnet:\/\/home)$/i.test(address)) { browserHome(); return; }
+    if (/^exit$/i.test(address)) { closeBrowser(); return; }
+    try {
+        if (!address || /\s/.test(address)) throw new Error("Invalid address");
+        const url = new URL(/^[a-z][a-z0-9+.-]*:/i.test(address) ? address : "https://" + address);
+        if (!["http:", "https:"].includes(url.protocol) || !url.hostname || url.username || url.password) throw new Error("Unsupported address");
+        addBrowserHistory(url.href);
+    } catch {
+        document.getElementById("browserStatus").textContent = "INVALID ADDRESS. Enter an HTTP or HTTPS website address.";
+    }
 }
+function addBrowserHistory(address) {
+    if (browserHistory[browserHistoryIndex] !== address) {
+        browserHistory.splice(browserHistoryIndex + 1);
+        browserHistory.push(address);
+        browserHistoryIndex = browserHistory.length - 1;
+    }
+    renderBrowser();
+}
+function browserBack() {
+    if (browserHistoryIndex > 0) { browserHistoryIndex--; renderBrowser(); }
+}
+function browserForward() {
+    if (browserHistoryIndex < browserHistory.length - 1) { browserHistoryIndex++; renderBrowser(); }
+}
+function browserHome() { addBrowserHistory("vaultnet://home"); }
+function browserReload() { renderBrowser(); }
+function renderBrowser() {
+    clearTimeout(browserTimer);
+    const address = browserHistory[browserHistoryIndex];
+    const home = address === "vaultnet://home";
+    document.getElementById("browserAddress").value = address;
+    document.getElementById("backButton").disabled = browserHistoryIndex === 0;
+    document.getElementById("forwardButton").disabled = browserHistoryIndex === browserHistory.length - 1;
+    document.getElementById("browserHome").hidden = !home;
+    document.getElementById("browserFallback").hidden = home;
+    const external = document.getElementById("openExternal");
+    if (home) external.removeAttribute("href");
+    else external.href = address;
+    // A fresh frame reloads the entered address after any in-frame navigation.
+    const oldFrame = document.getElementById("browserFrame");
+    const frame = oldFrame.cloneNode(false);
+    frame.removeAttribute("src");
+    frame.hidden = home;
+    oldFrame.replaceWith(frame);
+    const status = document.getElementById("browserStatus");
+    status.textContent = home ? "VAULTNET READY. ENTER A WEB ADDRESS." : "CONNECTING TO " + address;
+    if (home) return;
+    frame.addEventListener("load", function() {
+        clearTimeout(browserTimer);
+        // Blocked frames can fire load too; never report a guaranteed success.
+        status.textContent = "ADDRESS REQUESTED. If the page is blank or refused, use OPEN IN NEW TAB.";
+    });
+    frame.addEventListener("error", function() {
+        clearTimeout(browserTimer);
+        status.textContent = "PAGE UNAVAILABLE HERE. Try OPEN IN NEW TAB.";
+    });
+    browserTimer = setTimeout(function() {
+        status.textContent = "STILL WAITING? The site may be slow or block embedding. Try OPEN IN NEW TAB.";
+    }, 10000);
+    frame.src = address;
+}
+document.getElementById("addressForm").addEventListener("submit", function(event) {
+    event.preventDefault();
+    browserNavigate(document.getElementById("browserAddress").value);
+});
+document.getElementById("command").addEventListener("keydown", function(event) {
+    if (event.key === "Enter" && !event.isComposing && !this.disabled) runCommand();
+});
+document.getElementById("browserWindow").addEventListener("keydown", function(event) {
+    if (event.key === "Escape") closeBrowser();
+});
