@@ -137,3 +137,27 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 2px solid 
     #browserHome { padding: 14px; }
 }
 @keyframes blink { 50% { opacity: 0; } }
+
+#explorerWindow { position: fixed; inset: 5%; z-index: 11; display: flex; flex-direction: column; border: 2px solid #33ff33; background: #050b05; box-shadow: 0 0 28px #33ff3333; overflow: auto; }
+.fileTitle { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 14px; background: #112811; border-bottom: 1px solid; }
+.fileTitle strong { letter-spacing: 2px; }
+.fileTitle small, .fileLocation small { display: block; margin-top: 6px; }
+.fileToolbar { display: flex; flex-wrap: wrap; gap: 8px; padding: 12px; }
+.fileLocation { padding: 0 12px 12px; overflow-wrap: anywhere; }
+.fileWorkspace { display: flex; flex: 1; min-height: 180px; overflow: auto; border-block: 1px solid; }
+#fileList { width: 32%; min-width: 180px; padding: 12px; overflow-y: auto; box-sizing: border-box; }
+#fileList button { display: block; width: 100%; text-align: left; margin-bottom: 8px; overflow-wrap: anywhere; }
+#fileEditor { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 10px; padding: 12px; border-left: 1px solid; }
+#fileName { overflow-wrap: anywhere; }
+#fileContent { flex: 1; min-height: 130px; width: 100%; box-sizing: border-box; resize: none; color: #b0ffb0; background: #050505; border: 1px solid #33ff33; padding: 12px; font: 15px/1.6 "Courier New", monospace; }
+#fileContent:focus-visible { outline: 2px solid #b0ffb0; }
+#fileSave { align-self: flex-start; }
+#fileStatus { padding: 12px; margin: 0; font-size: 13px; overflow-wrap: anywhere; }
+@media (max-width: 600px) {
+    #explorerWindow { inset: 8px; }
+    .fileTitle small { font-size: 10px; }
+    .fileWorkspace { flex-direction: column; }
+    #fileList { width: 100%; max-height: 180px; flex-shrink: 0; }
+    .fileWorkspace:has(#fileEditor[hidden]) #fileList { max-height: none; flex: 1; }
+    #fileEditor { border-left: 0; border-top: 1px solid; }
+}

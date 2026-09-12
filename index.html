@@ -23,6 +23,7 @@
 
     <div id="desktopIcons">
         <button onclick="openBrowser()">VAULTNET</button>
+        <button onclick="fileAction(() => openExplorer('/'))">FILES</button>
         <button>SECURITY</button>
         <button>REACTOR</button>
         <button>PERSONNEL</button>
@@ -71,6 +72,26 @@
         <a id="openExternal" target="_blank" rel="noopener noreferrer">OPEN IN NEW TAB</a>
     </div>
 </section>
+<section id="explorerWindow" hidden aria-label="RobCo File Explorer">
+    <header class="fileTitle"><div><strong>ROBCO FILE EXPLORER</strong><small>v0.3 // VAULT RECORDS TERMINAL</small></div><button id="fileClose">CLOSE FILES</button></header>
+    <nav class="fileToolbar" aria-label="File navigation">
+        <button id="fileRoot">ROOT</button><button id="fileUp">UP</button>
+        <button id="folderNew">NEW FOLDER</button><button id="fileNew">NEW FILE</button>
+        <button id="fileRename">RENAME</button><button id="fileDelete">DELETE</button>
+    </nav>
+    <div class="fileLocation"><strong id="filePath"></strong><small id="fileClearance"></small></div>
+    <div class="fileWorkspace">
+        <nav id="fileList" aria-label="Files and folders"></nav>
+        <section id="fileEditor" hidden>
+            <label id="fileName" for="fileContent">SELECT A RECORD</label>
+            <textarea id="fileContent" spellcheck="false" maxlength="200000"></textarea>
+            <button id="fileSave">SAVE FILE</button>
+        </section>
+    </div>
+    <p id="fileStatus" role="status"></p>
+</section>
+<script src="filesystem.js"></script>
 <script src="script.js"></script>
+<script src="explorer.js"></script>
 </body>
 </html>

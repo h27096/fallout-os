@@ -1,4 +1,11 @@
-let personalLogs = JSON.parse(localStorage.getItem("vaultLogs")) || [];
+let personalLogs = [];
+try {
+    const savedLogs = JSON.parse(localStorage.getItem("vaultLogs"));
+    if (Array.isArray(savedLogs)) personalLogs = savedLogs.filter(log => typeof log === "string");
+} catch { /* Unavailable or malformed logs must not prevent boot. */ }
+function escapeTerminalText(text) {
+    return String(text).replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;');
+}
 let writingLog = false;
 let overseerMode = false;
 let waitingForPassword = false;
@@ -110,12 +117,15 @@ function runCommand(){
 
 if(writingLog){
 
-    personalLogs.push(command);
-
-    localStorage.setItem(
-        "vaultLogs",
-        JSON.stringify(personalLogs)
-    );
+    try {
+        const nextLogs = personalLogs.concat(command);
+        localStorage.setItem("vaultLogs", JSON.stringify(nextLogs));
+        personalLogs = nextLogs;
+    } catch {
+        output.innerHTML += "<br><br>LOG NOT SAVED. Storage is unavailable or full; retry or reload to cancel.";
+        document.getElementById("command").value = "";
+        return;
+    }
 
     output.innerHTML +=
     "<br><br>LOG SAVED.";
@@ -128,28 +138,14 @@ if(writingLog){
 
 }
         
+else if(fileTerminal(command)){
+    // Shared filesystem routing.
+}
+
 else if(command == "HELP"){
 
     showHelp(output);
 
-}
-
-else if(command == "DIR"){
-
-    output.innerHTML +=
-    "<br><br>VAULT FILE DIRECTORY:" +
-    "<br><br>SECURITY.DAT" +
-    "<br>REACTOR.DAT" +
-    "<br>OVERSEER.LOG";
-
-  if(overseerMode){
-
-    output.innerHTML +=
-    "<br>CLASSIFIED.DAT" +
-    "<br>EXPERIMENTS.DAT" +
-    "<br>PERSONNEL.DAT";
-
-}
 }
 
     else if(command == "STATUS"){
@@ -258,7 +254,7 @@ if(personalLogs.length > 0){
 
         output.innerHTML +=
         "<br><br>LOG " + (i + 1) + ":" +
-        "<br>" + personalLogs[i];
+        "<br>" + escapeTerminalText(personalLogs[i]);
 
     }
 
@@ -348,95 +344,6 @@ if(personalLogs.length > 0){
 
 }
 
-          else if(command.startsWith("OPEN ")){
-
-    let file = command.replace("OPEN ", "");
-
-    if(file == "SECURITY.DAT"){
-
-        output.innerHTML +=
-        "<br><br>SECURITY DATABASE:" +
-        "<br><br>DOOR CONTROL: ONLINE" +
-        "<br>CAMERAS: ACTIVE";
-
-    }
-
-    else if(file == "REACTOR.DAT"){
-
-        output.innerHTML +=
-        "<br><br>REACTOR DATABASE:" +
-        "<br><br>POWER OUTPUT: 98%" +
-        "<br>COOLANT: NORMAL" +
-        "<br>CORE TEMP: STABLE";
-
-    }
-
-    else if(file == "CLASSIFIED.DAT"){
-
-        if(overseerMode){
-
-            output.innerHTML +=
-            "<br><br>*** CLASSIFIED FILE ***" +
-            "<br><br>PROJECT: FROST WATCH" +
-            "<br>STATUS: ACTIVE" +
-            "<br>CLEARANCE: OVERSEER";
-
-        }
-
-        else{
-
-            output.innerHTML +=
-            "<br><br>ACCESS DENIED.";
-
-        }
-
-    }
-
-    else if(file == "EXPERIMENTS.DAT"){
-
-        if(overseerMode){
-
-            output.innerHTML +=
-            "<br><br>EXPERIMENT DATABASE" +
-            "<br><br>SUBJECT COUNT: 124" +
-            "<br>ACTIVE TESTS: 3" +
-            "<br>STATUS: CONFIDENTIAL";
-
-        }
-
-        else{
-
-            output.innerHTML +=
-            "<br><br>ACCESS DENIED.";
-
-        }
-
-    }
-
-    else if(file == "PERSONNEL.DAT"){
-
-        output.innerHTML +=
-        "<br><br>VAULT PERSONNEL DATABASE" +
-        "<br><br>ID 001: NATE" +
-        "<br>STATUS: UNKNOWN" +
-        "<br><br>ID 002: NORA" +
-        "<br>STATUS: DECEASED" +
-        "<br><br>ID 003: SHAUN" +
-        "<br>STATUS: CLASSIFIED" +
-        "<br><br>ID 004: SECURITY CHIEF" +
-        "<br>STATUS: ACTIVE";
-
-    }
-
-    else{
-
-        output.innerHTML +=
-        "<br><br>FILE NOT FOUND.";
-
-    }
-
-}
-
               else if(command == "BROWSER"){
 
     launchBrowser();
@@ -469,8 +376,10 @@ function showHelp(output){
         "HELP<br>" +
         "STATUS<br>" +
         "VAULT<br>" +
-        "DIR<br>" +
-        "OPEN<br>" +
+        "DIR [PATH]<br>" +
+        "CD [PATH] (.. = parent, / = root)<br>" +
+        "FILES<br>" +
+        "OPEN [FILE OR FOLDER]<br>" +
         "LOGS<br>" +
         "WRITELOG<br>" +
         "SECURITY<br>" +
@@ -488,8 +397,10 @@ function showHelp(output){
         "HELP<br>" +
         "STATUS<br>" +
         "VAULT<br>" +
-        "DIR<br>" +
-        "OPEN<br>" +
+        "DIR [PATH]<br>" +
+        "CD [PATH] (.. = parent, / = root)<br>" +
+        "FILES<br>" +
+        "OPEN [FILE OR FOLDER]<br>" +
         "BROWSER<br>" +
         "CLEAR";
 
@@ -583,7 +494,10 @@ document.getElementById("addressForm").addEventListener("submit", function(event
     browserNavigate(document.getElementById("browserAddress").value);
 });
 document.getElementById("command").addEventListener("keydown", function(event) {
-    if (event.key === "Enter" && !event.isComposing && !this.disabled) runCommand();
+    if (event.key === "Enter" && !event.isComposing && !this.disabled) {
+        event.preventDefault();
+        runCommand();
+    }
 });
 document.getElementById("browserWindow").addEventListener("keydown", function(event) {
     if (event.key === "Escape") closeBrowser();
