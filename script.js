@@ -151,6 +151,10 @@ else if(recordTerminal(command) || fileTerminal(command)){
     // Shared filesystem routing.
 }
 
+else if(command === "CALCULATOR" || command === "CALC"){
+    calculator.open();
+}
+
 else if(command == "HELP"){
 
     showHelp(output);
@@ -378,7 +382,7 @@ if(personalLogs.length > 0){
 }
 
 function showHelp(output){
-    output.innerHTML += '<br><br>PERSONAL APPS: HOLOTAPES | RADIO (or MUSIC)<br>';
+    output.innerHTML += '<br><br>PERSONAL APPS: HOLOTAPES | RADIO (or MUSIC) | CALCULATOR (or CALC)<br>';
 
     if(overseerMode){
 

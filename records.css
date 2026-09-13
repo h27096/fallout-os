@@ -40,10 +40,10 @@
 button, input, select, textarea, summary { font-family: inherit; }
 button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible, summary:focus-visible { outline: 2px solid #b0ffb0; outline-offset: 2px; }
 button:disabled:hover { background: #050505; color: #33ff33; }
-@media (max-width: 600px) {
+@media (max-width: 760px) {
     #desktopIcons { top: 42px; left: 8px; right: 8px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
     #desktopIcons button { min-width: 0; padding: 10px 4px; font-size: 12px; }
-    #terminalWindow, #browserWindow, #explorerWindow, .recordWindow { inset: 148px 8px 8px; }
+    #terminalWindow, #browserWindow, #explorerWindow, .recordWindow { inset: 160px 8px 8px; }
     .fileTitle, #browserTitleBar { padding: 10px; gap: 8px; }
     .fileTitle strong, #browserTitleBar strong { font-size: 14px; letter-spacing: 1px; }
     .fileTitle > button, #browserTitleBar > button { max-width: 45%; }

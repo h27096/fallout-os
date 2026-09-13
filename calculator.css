@@ -1,0 +1,17 @@
+#calculatorWindow .calcWorkspace { display: grid; grid-template-columns: minmax(240px, 1fr) minmax(200px, .7fr); gap: 24px; padding: 20px; }
+.calcConsole { min-width: 0; max-width: 640px; width: 100%; margin-inline: auto; }
+#calcExpression { font-size: 22px; }
+#calcResult { display: block; min-height: 1.5em; padding: 16px 0; font-size: 32px; color: #d2ffd2; overflow-wrap: anywhere; }
+.calcKeys { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin-block: 12px; }
+.calcKeys button { min-height: 44px; font-size: 18px; }
+#calcScientific { border-bottom: 1px dashed; padding-bottom: 12px; }
+#calcHistory { padding-left: 24px; overflow-wrap: anywhere; }
+#calcHistory li { margin-block: 12px; }
+#calcHistory button { text-align: left; width: 100%; overflow-wrap: anywhere; }
+.calcHistoryPanel { min-width: 0; border-left: 1px dashed; padding-left: 20px; }
+.calcHistoryPanel h2 { margin-top: 0; font-size: 18px; }
+#calcEquals { background: #1a421a; color: #d2ffd2; }
+@media (max-width: 700px) {
+    #calculatorWindow .calcWorkspace { grid-template-columns: minmax(0, 1fr); padding: 12px; }
+    .calcHistoryPanel { border-left: 0; border-top: 1px dashed; padding: 16px 0 0; }
+}

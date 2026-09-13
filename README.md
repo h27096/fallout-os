@@ -1,4 +1,16 @@
-# Fallout OS — Personal Apps v0.6
+# Fallout OS — RobCo Calculator v0.7
+
+## RobCo Calculator
+
+Select **CALCULATOR** on the desktop or type `CALCULATOR` / `CALC` in the terminal. Edit expressions with the keyboard or keypad, then press Enter, `=`, or COMPUTE. Includes arithmetic, decimals, parentheses, clear and backspace. Escape closes with the shared window focus behavior; switching apps retains the current expression.
+
+Scientific mode adds square root, powers (`^`), sine/cosine/tangent, pi, natural and base-10 logarithms. Trig defaults to degrees; choose radians as needed. Percent always divides the preceding value by 100 (`200*10% = 20`, `200+10% = 200.1`). Powers associate rightward, and `-2^2 = -4`; use `(-2)^2` for 4. Multiplication must be explicit. Results use JavaScript floating-point arithmetic and display 12 significant digits.
+
+The controlled parser accepts only arithmetic and named math functions, limits expressions to 512 characters, and reports invalid expressions, division by zero and nonfinite results without adding failed calculations to history. No eval or dynamic code execution is used.
+
+The latest 50 successful calculations and scientific/angle settings persist under the independent `robco.calculator.v1` key. Select a history row to restore its expression and angle mode. CLEAR HISTORY removes calculator history only. Damaged storage and conflicting writes are preserved; calculation continues in session memory if persistence fails. Existing app data is untouched.
+
+Run `node --test *.test.cjs` with Playwright and Microsoft Edge available. Calculator parser and browser tests cover math precedence, scientific functions, invalid input, editing, history, persistence, focus and responsive geometry alongside the existing core regression suites.
 
 Open `index.html` in a browser, or serve this directory with a static web server. Start the system, then select **HOLOTAPES** or **MUSIC / RADIO** directly on the desktop. Both also have shortcuts in **FILES**. Browser v0.2 is still available through **VAULTNET** or `BROWSER`.
 

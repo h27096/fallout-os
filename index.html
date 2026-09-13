@@ -6,6 +6,7 @@
     <title>Fallout OS</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="records.css">
+    <link rel="stylesheet" href="calculator.css">
 </head>
 <body>
 
@@ -28,6 +29,7 @@
         <button onclick="fileAction(() => openExplorer('/'))">FILES</button>
         <button onclick="recordApps.holotapes.open()">HOLOTAPES</button>
         <button onclick="radio.open()">MUSIC / RADIO</button>
+        <button onclick="calculator.open()">CALCULATOR</button>
     </nav>
 
     <section id="terminalWindow" aria-label="RobCo terminal">
@@ -112,6 +114,20 @@
         </main>
     </div><p id="radioStatus" class="recordStatus" role="status"></p>
 </section>
+<section id="calculatorWindow" class="recordWindow" hidden aria-label="RobCo Calculator">
+    <header class="fileTitle"><div><strong>ROBCO CALCULATOR</strong><small>v0.7 // PRECISION COMPUTATION TERMINAL</small></div><button id="calcClose">CLOSE CALCULATOR</button></header>
+    <nav class="fileToolbar" aria-label="Calculator settings"><button id="calcMode" aria-pressed="false">SCIENTIFIC MODE</button><label>ANGLES<select id="calcAngle"><option value="deg">DEGREES</option><option value="rad">RADIANS</option></select></label></nav>
+    <div class="calcWorkspace">
+        <div class="calcConsole">
+            <form id="calcForm"><label for="calcExpression">EXPRESSION<input id="calcExpression" maxlength="512" autocomplete="off" spellcheck="false" placeholder="(12 + 3) × 4" aria-describedby="calcHelp"></label><output id="calcResult" for="calcExpression" aria-live="polite">0</output><button id="calcEquals" type="submit">= COMPUTE</button></form>
+            <div id="calcScientific" class="calcKeys" hidden aria-label="Scientific keypad"></div>
+            <div id="calcKeys" class="calcKeys" aria-label="Calculator keypad"></div>
+            <p id="calcHelp">Type or use the keypad. Enter or = computes. Backspace edits; Escape closes. Use * for ×, / for ÷ and ^ for powers. Percent divides by 100: 200 × 10% = 20.</p>
+        </div>
+        <aside class="calcHistoryPanel"><h2>CALCULATION HISTORY</h2><p>Latest 50 results. Select one to edit its expression.</p><button id="calcClearHistory">CLEAR HISTORY</button><ol id="calcHistory" reversed></ol><p id="calcEmpty">NO CALCULATIONS YET.</p></aside>
+    </div>
+    <p id="calcStatus" class="recordStatus" role="status">READY.</p>
+</section>
 <script src="windows.js"></script>
 <script src="filesystem.js"></script>
 <script src="script.js"></script>
@@ -120,5 +136,7 @@
 <script src="holotapes.js"></script>
 <script src="radio-store.js"></script>
 <script src="radio.js"></script>
+<script src="calculator-math.js"></script>
+<script src="calculator.js"></script>
 </body>
 </html>
