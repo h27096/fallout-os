@@ -1,11 +1,11 @@
 /* Shared text-record UI. The filesystem service remains the persistence boundary. */
 'use strict';
 const recordApps = {};
-function createRecordApp({ id, name, version, directory, extension }) {
+function createRecordApp({ id, name, version, directory, extension, reader = false }) {
     const panel = document.createElement('section');
     panel.className = 'recordWindow'; panel.id = id + 'Window'; panel.hidden = true;
     panel.setAttribute('aria-label', 'RobCo ' + name);
-    panel.innerHTML = `<header class="fileTitle"><div><strong>ROBCO ${name.toUpperCase()}</strong><small>${version} // PERSONAL RECORDS</small></div><button data-action="close">CLOSE</button></header>
+    panel.innerHTML = `<header class="fileTitle"><div><strong>ROBCO ${name.toUpperCase()}</strong><small>${version} // PERSONAL RECORDS</small></div><button data-action="close">CLOSE ${name.toUpperCase()}</button></header>
       <nav class="fileToolbar" aria-label="Record actions"><button data-action="new">NEW</button><button data-action="save">SAVE</button><button data-action="rename">RENAME</button><button data-action="delete">DELETE</button><button data-action="files">VIEW IN FILES</button></nav>
       <div class="recordWorkspace"><aside><label>SEARCH<input data-field="search" type="search" placeholder="Find a record"></label><nav data-field="list" aria-label="Record library"></nav></aside>
       <main><label>RECORD TITLE<input data-field="title" maxlength="55" placeholder="UNTITLED"></label><small data-field="meta"></small><label data-field="bodyLabel">RECORD TEXT<textarea data-field="body" maxlength="200000" spellcheck="false" placeholder="Begin your vault record..."></textarea></label></main></div>
@@ -13,6 +13,17 @@ function createRecordApp({ id, name, version, directory, extension }) {
     document.body.append(panel);
     const field = key => panel.querySelector(`[data-field="${key}"]`);
     const button = key => panel.querySelector(`[data-action="${key}"]`);
+    const reading = document.createElement('pre'); reading.className = 'holotapeReader'; reading.hidden = true;
+    if (reader) { panel.querySelector('main').append(reading); }
+    function mode(read) {
+        if (!reader) return;
+        reading.textContent = field('body').value || '[BLANK HOLOTAPE]';
+        reading.hidden = !read; field('bodyLabel').hidden = read;
+    }
+    function addAction(key, label, fn) {
+        const control = document.createElement('button'); control.dataset.action = key; control.textContent = label;
+        control.onclick = () => action(fn); panel.querySelector('.fileToolbar').append(control); return control;
+    }
     let selected = null, original = '', originalTitle = '', returnFocus;
     const status = text => { panel.querySelector('[role="status"]').textContent = text; };
     const dirty = () => field('body').value !== original || field('title').value !== originalTitle;
@@ -35,6 +46,7 @@ function createRecordApp({ id, name, version, directory, extension }) {
     function reset(title = '', body = '') {
         selected = null; original = ''; originalTitle = '';
         field('title').value = title; field('body').value = body;
+        field('title').readOnly = false; mode(false);
         field('meta').textContent = directory + ' // NEW RECORD';
         list(); status('DRAFT — select SAVE to preserve this record.'); field('title').focus();
     }
@@ -43,6 +55,7 @@ function createRecordApp({ id, name, version, directory, extension }) {
         if (record.type !== 'file') throw Error('Select a text file.');
         selected = path; original = record.content; originalTitle = titleOf(path);
         field('title').value = originalTitle; field('body').value = original;
+        field('title').readOnly = true; mode(true);
         field('meta').textContent = path; list(); status('RECORD LOADED.');
     }
     function save() {
@@ -69,7 +82,7 @@ function createRecordApp({ id, name, version, directory, extension }) {
         if (!confirm('Delete this record and any unsaved changes?')) return;
         vaultFiles.remove(selected); reset(); status('RECORD DELETED.');
     });
-    button('files').onclick = () => action(() => { if (discard()) { openExplorer(selected); if (!document.getElementById('explorerWindow').hidden && explorerFile === selected) panel.hidden = true; } });
+    button('files').onclick = () => action(() => { if (discard()) { openExplorer(selected); if (!document.getElementById('explorerWindow').hidden && explorerFile === selected) { field('body').value = original; field('title').value = originalTitle; panel.hidden = true; } } });
     field('search').oninput = () => action(list);
     for (const key of ['title', 'body']) field(key).addEventListener('input', () => status(dirty() ? 'UNSAVED CHANGES.' : 'SAVED RECORD.'));
     panel.addEventListener('keydown', event => {
@@ -77,10 +90,11 @@ function createRecordApp({ id, name, version, directory, extension }) {
         if (event.key === 'Escape') button('close').click();
     });
     window.addEventListener('beforeunload', event => { if (dirty()) { event.preventDefault(); event.returnValue = ''; } });
-    return { panel, field, button, status, action, dirty, discard, reset,
+    if (reader) { addAction('read', 'READ TAPE', () => mode(true)); addAction('edit', 'EDIT TAPE', () => { mode(false); field('body').focus(); }); }
+    return { panel, field, button, status, action, dirty, discard, reset, addAction,
         get selected() { return selected; },
-        open() { returnFocus = document.activeElement; panel.hidden = false; action(list); status(vaultFiles.warning || (dirty() ? 'UNSAVED DRAFT.' : 'READY. Create or select a record.')); field('search').focus(); },
-        draft(title, body) { if (!discard()) return; this.open(); action(() => reset(title, body)); }
+        open() { returnFocus = document.activeElement; for (const app of Object.values(recordApps)) app.panel.hidden = true; panel.hidden = false; action(list); status(vaultFiles.warning || (dirty() ? 'UNSAVED DRAFT.' : 'READY. Create or select a record.')); field('search').focus(); },
+        draft(title, body) { if (!discard()) return false; this.open(); action(() => reset(title, body)); return true; }
     };
 }
 recordApps.notes = createRecordApp({ id: 'notes', name: 'Notes', version: 'v0.4', directory: '/VAULT/NOTES', extension: '.LOG' });
@@ -89,3 +103,4 @@ function recordTerminal(command) {
     if (!app) return false;
     app.open(); return true;
 }
+

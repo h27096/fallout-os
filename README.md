@@ -33,3 +33,9 @@ Coverage includes boot, terminal, browser navigation and blocked-frame fallback,
 Select NOTES or type `NOTES`. Create, search, edit, rename and delete personal logs. SAVE (or Ctrl/Cmd+S) persists the record; closing or switching records checks unsaved changes. VIEW IN FILES opens the same record in File Explorer. Notes live in `/VAULT/NOTES/*.LOG` with exact plain-text content and are accessible through `OPEN`. Titles follow filesystem naming rules and are normalized to uppercase. Rename saved titles with RENAME. Storage errors retain the draft, and edits made in Files are detected before overwriting a loaded note.
 
 Run `node notes.test.cjs` for Notes interaction and persistence checks with the same Playwright setup above.
+
+## Holotapes v0.5
+
+Select HOLOTAPES or type `HOLOTAPES`. Saved tapes open in a read-only reader; EDIT TAPE switches to the editor, READ TAPE previews current text, and SAVE persists it. Tapes are plain-text `/VAULT/HOLOTAPES/*.DAT` records, intentionally compatible with Files and terminal OPEN. New tapes have no bundled copyrighted content.
+
+COPY TO HOLOTAPE in Notes copies the current text into a new tape draft. COPY TO NOTES does the reverse. COPY FROM FILE accepts a vault file path and respects Overseer permissions. Copies are independent, require SAVE, and never overwrite the source. Switching between these apps retains any draft in memory; closing, replacing a draft, or leaving the site guards unsaved text. `node holotapes.test.cjs` covers reading, editing, copies, permissions and persistence.
