@@ -1,6 +1,6 @@
 # Fallout OS — Personal Apps v0.6
 
-Open `index.html` in a browser, or serve this directory with a static web server. Start the system, then select **FILES**. Browser v0.2 is still available through **VAULTNET** or `BROWSER`.
+Open `index.html` in a browser, or serve this directory with a static web server. Start the system, then select **NOTES**, **HOLOTAPES**, or **MUSIC / RADIO** directly on the desktop. All three also have shortcuts in **FILES**. Browser v0.2 is still available through **VAULTNET** or `BROWSER`.
 
 ## Files and terminal commands
 
@@ -51,3 +51,17 @@ The library starts empty. Only add media you own or have permission to access. N
 `radio-store.js` owns validated metadata and the replaceable storage adapter; `radio.js` owns browser audio and local-file handles. Electron can replace these boundaries with IPC-backed storage and media paths. Existing Overseer gates remain application role checks, not encryption.
 
 Run `node radio-store.test.cjs` and `node radio.test.cjs`. The browser test generates its own short WAV signal and serves it locally; no external media is fetched. The complete regression suite is `filesystem.test.cjs`, `browser.test.cjs`, `explorer.test.cjs`, `notes.test.cjs`, `holotapes.test.cjs`, `radio-store.test.cjs`, and `radio.test.cjs`. All browser suites use Playwright with Microsoft Edge.
+
+## App access and playlist files
+
+The Files toolbar opens Notes and Holotapes even when their libraries are empty. When a record in `/VAULT/NOTES` or `/VAULT/HOLOTAPES` is selected, its corresponding shortcut opens that saved record in the app. Files keeps its plain-text editor. Unsaved changes are checked before transferring to an app. The desktop scrolls on short screens so the terminal cannot cover launch buttons.
+
+Radio's **SAVE PLAYLIST TO FILES** creates a new `.DAT` record in `/VAULT/MUSIC`. It contains a versioned `robco.playlist` JSON document with station metadata and media references, not audio bytes. Existing files are never overwritten. **COPY PLAYLIST FROM FILE** imports a validated independent playlist; alternatively select that file in Files and press **MUSIC / RADIO**. Other Files locations simply open the player. Local media must still be reselected. Invalid files, denied clearance and storage errors leave the saved radio library intact.
+
+Run `node app-access.test.cjs` for actual desktop launch clicks at desktop and short mobile sizes, Files-to-Holotapes reading, playlist export/import, reload persistence and malformed-playlist rollback.
+
+## September 13 repository audit
+
+At inspection, `main` ended at `491ea0f` (File Explorer v0.3). The separate `sprint/notes-holotapes-radio` branch already contained `602befa` (Notes), `1c26c48` (Holotapes), and `1e5faa5` (Music/Radio), including desktop buttons and tests. Those apps were implemented but had not reached main. The exact version loaded in a user's existing browser session cannot be inferred from repository history alone.
+
+This follow-up retains all three original feature commits, adds explicit Files app shortcuts and playlist file integration, and prevents the terminal from overlapping desktop launchers on short screens. It does not change existing storage keys or rewrite user records. All eight suites above passed, including the existing Browser, Files, boot, terminal, Overseer, logs and lockdown regressions, and real local/URL WAV playback.

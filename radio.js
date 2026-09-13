@@ -13,6 +13,28 @@ const radio = (() => {
     const update = change => { store.update(change); render(); };
     const uid = () => crypto.randomUUID();
     const fileKey = file => JSON.stringify([file.name, file.size, file.lastModified]);
+    function importPlaylist(path) {
+        const node = vaultFiles.get(path);
+        if (node.type !== 'file') throw Error('Select a playlist .DAT file.');
+        const data = JSON.parse(node.content);
+        if (data?.format !== 'robco.playlist' || data.version !== 1 || !data.station || !Array.isArray(data.station.tracks)) throw Error('Not a RobCo playlist file.');
+        const imported = { id: uid(), name: data.station.name, tracks: data.station.tracks.map(track => ({ ...track, id: uid() })) };
+        // The store validates every source and limit before committing any change.
+        update(next => { next.stations.push(imported); next.stationId = imported.id; next.trackId = imported.tracks[0]?.id || null; });
+        stop(); status('PLAYLIST COPIED. Press PLAY; reselect local audio files if needed.');
+    }
+    el('SavePlaylist').onclick = () => action(() => {
+        const name = prompt('New playlist file name (.DAT):', 'PLAYLIST.DAT');
+        if (name === null) return;
+        if (!vaultFiles.list('/VAULT').some(item => item.path === '/VAULT/MUSIC')) vaultFiles.create('/VAULT', 'MUSIC', 'folder');
+        const content = JSON.stringify({ format: 'robco.playlist', version: 1, station: station() }, null, 2);
+        const path = vaultFiles.create('/VAULT/MUSIC', name, 'file', content);
+        status('PLAYLIST SAVED: ' + path + '. Audio files remain on your device.');
+    });
+    el('ImportPlaylist').onclick = () => action(() => {
+        const path = prompt('Vault playlist path:', '/VAULT/MUSIC/PLAYLIST.DAT');
+        if (path !== null) importPlaylist(vaultFiles.resolve(path));
+    });
     function stop() { generation++; audio.pause(); audio.removeAttribute('src'); audio.load(); loadedId = null; progress(); }
     function render() {
         const data = state(), selected = station(), track = current();
@@ -124,6 +146,18 @@ const radio = (() => {
     for (const event of ['timeupdate', 'durationchange', 'loadedmetadata', 'emptied']) audio.addEventListener(event, progress);
     panel.addEventListener('keydown', event => { if (event.key === 'Escape') el('Close').click(); });
     render(); progress();
-    return { open() { returnFocus = document.activeElement; for (const app of Object.values(recordApps)) app.panel.hidden = true; panel.hidden = false; render(); status(store.warning || 'READY. Use media you own or have permission to stream.'); el('Station').focus(); }, panel };
+    return { open() { returnFocus = document.activeElement; for (const app of Object.values(recordApps)) app.panel.hidden = true; panel.hidden = false; render(); status(store.warning || 'READY. Use media you own or have permission to stream.'); el('Station').focus(); }, importPlaylist, panel };
 })();
 recordApps.radio = radio;
+
+function openRadioFromFiles() {
+    fileAction(() => {
+        if (!discardFileChanges()) return;
+        const path = explorerFile;
+        if (path && path.startsWith('/VAULT/MUSIC/')) radio.importPlaylist(path);
+        radio.open();
+        fileElement('fileContent').value = explorerOriginal;
+        fileElement('explorerWindow').hidden = true;
+        explorerFile = null;
+    });
+}

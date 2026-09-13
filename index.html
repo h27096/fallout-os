@@ -84,6 +84,7 @@
         <button id="fileRename">RENAME</button><button id="fileDelete">DELETE</button>
         <button onclick="openRecordFromFiles('notes')">NOTES</button>
         <button onclick="openRecordFromFiles('holotapes')">HOLOTAPES</button>
+        <button onclick="openRadioFromFiles()">MUSIC / RADIO</button>
     </nav>
     <div class="fileLocation"><strong id="filePath"></strong><small id="fileClearance"></small></div>
     <div class="fileWorkspace">
@@ -98,7 +99,7 @@
 </section>
 <section id="radioWindow" class="recordWindow" hidden aria-label="RobCo Music and Radio">
     <header class="fileTitle"><div><strong>ROBCO RADIO</strong><small>v0.6 // WASTELAND BROADCAST RECEIVER</small></div><button id="radioClose">CLOSE RADIO</button></header>
-    <nav class="fileToolbar" aria-label="Station actions"><button id="radioNewStation">NEW STATION</button><button id="radioRenameStation">RENAME STATION</button><button id="radioDeleteStation">DELETE STATION</button></nav>
+    <nav class="fileToolbar" aria-label="Station actions"><button id="radioNewStation">NEW STATION</button><button id="radioRenameStation">RENAME STATION</button><button id="radioDeleteStation">DELETE STATION</button><button id="radioSavePlaylist">SAVE PLAYLIST TO FILES</button><button id="radioImportPlaylist">COPY PLAYLIST FROM FILE</button></nav>
     <div class="recordWorkspace">
         <aside><label for="radioStation">STATION / PLAYLIST</label><select id="radioStation"></select><nav id="radioTracks" data-field="list" aria-label="Playlist tracks"></nav></aside>
         <main>
