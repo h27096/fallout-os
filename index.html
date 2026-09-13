@@ -27,6 +27,7 @@
         <button onclick="fileAction(() => openExplorer('/'))">FILES</button>
         <button onclick="recordApps.notes.open()">NOTES</button>
         <button onclick="recordApps.holotapes.open()">HOLOTAPES</button>
+        <button onclick="radio.open()">MUSIC / RADIO</button>
         <button>SECURITY</button>
         <button>REACTOR</button>
         <button>PERSONNEL</button>
@@ -93,10 +94,31 @@
     </div>
     <p id="fileStatus" role="status"></p>
 </section>
+<section id="radioWindow" class="recordWindow" hidden aria-label="RobCo Music and Radio">
+    <header class="fileTitle"><div><strong>ROBCO RADIO</strong><small>v0.6 // WASTELAND BROADCAST RECEIVER</small></div><button id="radioClose">CLOSE RADIO</button></header>
+    <nav class="fileToolbar" aria-label="Station actions"><button id="radioNewStation">NEW STATION</button><button id="radioRenameStation">RENAME STATION</button><button id="radioDeleteStation">DELETE STATION</button></nav>
+    <div class="recordWorkspace">
+        <aside><label for="radioStation">STATION / PLAYLIST</label><select id="radioStation"></select><nav id="radioTracks" data-field="list" aria-label="Playlist tracks"></nav></aside>
+        <main>
+            <small>ON THE AIR // PERSONAL VAULT FREQUENCY</small><h2 id="radioNow">STANDING BY</h2><small id="radioSource"></small>
+            <audio id="radioAudio" preload="metadata"></audio>
+            <div class="radioTransport"><button id="radioPrevious">PREVIOUS</button><button id="radioPlay">PLAY</button><button id="radioNext">NEXT</button></div>
+            <label>PLAYBACK POSITION<input id="radioSeek" type="range" min="0" max="1" step="0.1" value="0" disabled></label><output id="radioTime"></output>
+            <div class="radioSettings"><label>VOLUME<input id="radioVolume" type="range" min="0" max="1" step="0.01"></label><button id="radioMute">MUTE</button><button id="radioShuffle" aria-pressed="false">SHUFFLE</button><label>REPEAT<select id="radioRepeat"><option value="off">OFF</option><option value="all">PLAYLIST</option><option value="one">TRACK</option></select></label></div>
+            <details open><summary>ADD MEDIA</summary><p>Use your own audio or a permitted direct audio/stream URL. Website and video-page links are not audio sources.</p>
+                <form id="radioAddURL"><label>TRACK / STATION TITLE<input id="radioTitle" maxlength="200" placeholder="Optional title"></label><label>AUDIO URL<input id="radioURL" type="url" required placeholder="https://…/audio.mp3"></label><button type="submit">ADD AUDIO URL</button></form>
+                <label>CHOOSE AUDIO FILES<input id="radioFiles" type="file" accept="audio/*,.mp3,.wav,.ogg,.m4a,.aac,.flac,.opus" multiple></label><small>Local files stay on your device. Playlist entries persist; reselect the same files after reloading.</small>
+            </details>
+            <div class="radioTransport"><button id="radioUp">MOVE UP</button><button id="radioDown">MOVE DOWN</button><button id="radioRemove">REMOVE TRACK</button></div>
+        </main>
+    </div><p id="radioStatus" class="recordStatus" role="status"></p>
+</section>
 <script src="filesystem.js"></script>
 <script src="script.js"></script>
 <script src="explorer.js"></script>
 <script src="records.js"></script>
 <script src="holotapes.js"></script>
+<script src="radio-store.js"></script>
+<script src="radio.js"></script>
 </body>
 </html>

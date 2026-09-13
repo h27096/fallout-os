@@ -1,4 +1,4 @@
-# Fallout OS — File Explorer v0.3
+# Fallout OS — Personal Apps v0.6
 
 Open `index.html` in a browser, or serve this directory with a static web server. Start the system, then select **FILES**. Browser v0.2 is still available through **VAULTNET** or `BROWSER`.
 
@@ -39,3 +39,15 @@ Run `node notes.test.cjs` for Notes interaction and persistence checks with the 
 Select HOLOTAPES or type `HOLOTAPES`. Saved tapes open in a read-only reader; EDIT TAPE switches to the editor, READ TAPE previews current text, and SAVE persists it. Tapes are plain-text `/VAULT/HOLOTAPES/*.DAT` records, intentionally compatible with Files and terminal OPEN. New tapes have no bundled copyrighted content.
 
 COPY TO HOLOTAPE in Notes copies the current text into a new tape draft. COPY TO NOTES does the reverse. COPY FROM FILE accepts a vault file path and respects Overseer permissions. Copies are independent, require SAVE, and never overwrite the source. Switching between these apps retains any draft in memory; closing, replacing a draft, or leaving the site guards unsaved text. `node holotapes.test.cjs` covers reading, editing, copies, permissions and persistence.
+
+## Music / Radio v0.6
+
+Select MUSIC / RADIO or type `RADIO` or `MUSIC`. Create, rename and delete named stations/playlists; add direct HTTP(S) audio/stream URLs or select local audio files. Playback starts only after PLAY. Use previous/next, pause, seek for finite media, volume, mute, shuffle and repeat (off/playlist/track). Reorder or remove tracks. Closing Radio pauses playback; switching to Notes or Holotapes keeps audio playing until Radio is paused or closed.
+
+The library starts empty. Only add media you own or have permission to access. No Fallout soundtrack or third-party stream is bundled. Video/website URLs do not work as audio sources. Network failures and unsupported formats report a signal error. Live streams may not offer seeking or a finite duration.
+
+`robco.radio.v1` stores playlist metadata, selected station/track, volume, mute, shuffle and repeat. Playback position is not saved and reload never autoplays. Local files are played with temporary object URLs and never uploaded or written to localStorage. Reselect the same files after reload to reconnect their saved entries (matching name, size and modification time); modified files become new entries. Clearing browser site data deletes saved metadata. Radio shares the filesystem's failure policy: quota and stale-write errors preserve saved state; damaged storage is preserved for recovery instead of overwritten.
+
+`radio-store.js` owns validated metadata and the replaceable storage adapter; `radio.js` owns browser audio and local-file handles. Electron can replace these boundaries with IPC-backed storage and media paths. Existing Overseer gates remain application role checks, not encryption.
+
+Run `node radio-store.test.cjs` and `node radio.test.cjs`. The browser test generates its own short WAV signal and serves it locally; no external media is fetched. The complete regression suite is `filesystem.test.cjs`, `browser.test.cjs`, `explorer.test.cjs`, `notes.test.cjs`, `holotapes.test.cjs`, `radio-store.test.cjs`, and `radio.test.cjs`. All browser suites use Playwright with Microsoft Edge.

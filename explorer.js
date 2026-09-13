@@ -74,6 +74,7 @@ fileElement('fileRoot').addEventListener('click', () => fileAction(() => openExp
 fileElement('fileNew').addEventListener('click', () => fileAction(() => createExplorerEntry('file')));
 fileElement('folderNew').addEventListener('click', () => fileAction(() => createExplorerEntry('folder')));
 fileElement('fileSave').addEventListener('click', () => fileAction(() => {
+    if (vaultFiles.get(explorerFile).content !== explorerOriginal) throw Error('Record changed in another app. Reopen it before saving; copy your draft first.');
     vaultFiles.write(explorerFile, fileElement('fileContent').value);
     explorerOriginal = fileElement('fileContent').value; fileStatus('FILE SAVED.');
 }));

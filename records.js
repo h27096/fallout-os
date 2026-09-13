@@ -72,7 +72,7 @@ function createRecordApp({ id, name, version, directory, extension, reader = fal
     }
     button('new').onclick = () => action(() => { if (discard()) reset(); });
     button('save').onclick = () => action(save);
-    button('close').onclick = () => { if (discard()) { field('body').value = original; field('title').value = originalTitle; panel.hidden = true; (returnFocus || document.getElementById('command')).focus(); } };
+    button('close').onclick = () => { if (discard()) { field('body').value = original; field('title').value = originalTitle; mode(true); panel.hidden = true; (returnFocus || document.getElementById('command')).focus(); } };
     button('rename').onclick = () => action(() => {
         if (!discard()) return;
         const title = prompt('New record title:', originalTitle); if (title === null) return;
@@ -82,7 +82,7 @@ function createRecordApp({ id, name, version, directory, extension, reader = fal
         if (!confirm('Delete this record and any unsaved changes?')) return;
         vaultFiles.remove(selected); reset(); status('RECORD DELETED.');
     });
-    button('files').onclick = () => action(() => { if (discard()) { openExplorer(selected); if (!document.getElementById('explorerWindow').hidden && explorerFile === selected) { field('body').value = original; field('title').value = originalTitle; panel.hidden = true; } } });
+    button('files').onclick = () => action(() => { if (discard()) { openExplorer(selected); if (!document.getElementById('explorerWindow').hidden && explorerFile === selected) { field('body').value = original; field('title').value = originalTitle; mode(true); panel.hidden = true; } } });
     field('search').oninput = () => action(list);
     for (const key of ['title', 'body']) field(key).addEventListener('input', () => status(dirty() ? 'UNSAVED CHANGES.' : 'SAVED RECORD.'));
     panel.addEventListener('keydown', event => {
@@ -99,8 +99,9 @@ function createRecordApp({ id, name, version, directory, extension, reader = fal
 }
 recordApps.notes = createRecordApp({ id: 'notes', name: 'Notes', version: 'v0.4', directory: '/VAULT/NOTES', extension: '.LOG' });
 function recordTerminal(command) {
-    const app = recordApps[command.trim().toLowerCase()];
+    const name = command.trim().toLowerCase();
+    const key = name === 'music' ? 'radio' : name;
+    const app = Object.hasOwn(recordApps, key) ? recordApps[key] : null;
     if (!app) return false;
     app.open(); return true;
 }
-

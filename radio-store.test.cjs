@@ -1,0 +1,10 @@
+const assert = require('node:assert/strict'); require('./radio-store.js');
+let value=null, fail=false; const storage={getItem:()=>value,setItem:(_,v)=>{if(fail)throw Error('quota');value=v;}};
+const store=RobcoRadioStore.create(storage);
+store.update(s=>{s.volume=0.2;s.repeat='all';s.stations[0].tracks.push({id:'a',title:'Test',kind:'url',url:'https://example.com/a.mp3'});s.trackId='a';});
+assert.equal(RobcoRadioStore.create(storage).state.volume,0.2);
+for(const url of ['javascript:alert(1)','file:///a','data:audio/wav,x','https://user:password@example.com/a']) assert.throws(()=>RobcoRadioStore.mediaURL(url));
+fail=true;assert.throws(()=>store.update(s=>s.volume=0.7),/NOT SAVED/);assert.equal(store.state.volume,0.2);fail=false;
+const stale=RobcoRadioStore.create(storage);store.update(s=>s.shuffle=true);assert.throws(()=>stale.update(s=>s.muted=true),/another tab/);
+value='{broken';const recovery=RobcoRadioStore.create(storage);assert.match(recovery.warning,/damaged/);assert.throws(()=>recovery.update(s=>s.volume=1));assert.equal(value,'{broken');
+console.log('PASS: Radio persistence, validation, unsafe URLs, quota rollback, stale writes and recovery.');

@@ -46,7 +46,7 @@ const fs = require('node:fs'), http = require('node:http'), assert = require('no
   assert.equal(await page.locator('#fileSave').isDisabled(),true);
   await page.locator('#fileClose').click(); await command('OPEN CLASSIFIED.DAT');
   await page.locator('#fileContent').fill('OVERSEER UPDATED'); await page.locator('#fileSave').click();
-  await page.locator('#fileRoot').click();
+  await page.evaluate(()=>vaultFiles.write('/CLASSIFIED/CLASSIFIED.DAT','Changed elsewhere')); await page.locator('#fileContent').fill('Old draft'); await page.locator('#fileSave').click(); assert.match(await page.locator('#fileStatus').innerText(),/changed in another app/); page.once('dialog',d=>d.accept()); await page.locator('#fileRoot').click();
   await page.screenshot({path:require('node:os').tmpdir()+'/fallout-explorer-desktop.png'});
   await page.setViewportSize({width:390,height:844});
   await page.screenshot({path:require('node:os').tmpdir()+'/fallout-explorer-mobile.png'});
