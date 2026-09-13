@@ -16,3 +16,18 @@ tapes.addAction('note', 'COPY TO NOTES', () => {
 recordApps.notes.addAction('tape', 'COPY TO HOLOTAPE', () => {
     tapes.draft(recordApps.notes.field('title').value, recordApps.notes.field('body').value);
 });
+
+// Explicit app shortcuts preserve the general-purpose Files editor and its drafts.
+function openRecordFromFiles(key) {
+    fileAction(() => {
+        if (!discardFileChanges()) return;
+        const app = recordApps[key];
+        const directory = key === 'notes' ? '/VAULT/NOTES/' : '/VAULT/HOLOTAPES/';
+        if (explorerFile && explorerFile.startsWith(directory)) {
+            if (!app.openFile(explorerFile)) return;
+        } else app.open();
+        fileElement('fileContent').value = explorerOriginal;
+        fileElement('explorerWindow').hidden = true;
+        explorerFile = null;
+    });
+}

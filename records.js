@@ -94,6 +94,7 @@ function createRecordApp({ id, name, version, directory, extension, reader = fal
     return { panel, field, button, status, action, dirty, discard, reset, addAction,
         get selected() { return selected; },
         open() { returnFocus = document.activeElement; for (const app of Object.values(recordApps)) app.panel.hidden = true; panel.hidden = false; action(list); status(vaultFiles.warning || (dirty() ? 'UNSAVED DRAFT.' : 'READY. Create or select a record.')); field('search').focus(); },
+        openFile(path) { if (!discard()) return false; load(path); this.open(); return true; },
         draft(title, body) { if (!discard()) return false; this.open(); action(() => reset(title, body)); return true; }
     };
 }
