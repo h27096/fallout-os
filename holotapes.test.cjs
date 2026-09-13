@@ -6,14 +6,21 @@ const fs = require('node:fs'), http = require('node:http'), assert = require('no
  try {
   const page=await browser.newPage(), errors=[];page.on('pageerror',e=>errors.push(e.message));await page.goto('http://127.0.0.1:'+server.address().port);
   const app=page.locator('#holotapesWindow'), field=n=>app.locator(`[data-field="${n}"]`), click=n=>app.locator(`[data-action="${n}"]`).click();
-  await page.evaluate(()=>{recordApps.notes.draft('Expedition','Day 1\n<script>literal</script>');recordApps.notes.button('save').click();recordApps.notes.button('tape').click();});
+  await page.evaluate(()=>{vaultFiles.create('/VAULT','NOTES','folder');vaultFiles.create('/VAULT/NOTES','EXPEDITION.LOG','file','Day 1\n<script>literal</script>');recordApps.holotapes.open();});
+  const savedBefore = await page.evaluate(()=>localStorage.getItem('robco.files.v1'));
+  await page.reload();
+  assert.equal(await page.evaluate(()=>localStorage.getItem('robco.files.v1')),savedBefore);
+  assert.equal(await page.locator('#notesWindow, #securityWindow, #reactorWindow, #personnelWindow').count(),0);
+  assert.equal(await page.evaluate(()=>recordTerminal('NOTES')),false);
+  assert.equal(await page.getByRole('button',{name:/^(NOTES|SECURITY|REACTOR|PERSONNEL|COPY TO NOTES)$/}).count(),0);
+  await page.evaluate(()=>recordApps.holotapes.open());
+  page.once('dialog',d=>d.accept('/VAULT/NOTES/EXPEDITION.LOG'));await click('import');
   assert.equal(await app.isVisible(),true); await click('save');assert.equal(await app.locator('.holotapeReader').innerText(),'Day 1\n<script>literal</script>');assert.equal(await field('body').isVisible(),false);
   await click('edit');await field('body').fill('Day 2');await click('read');assert.equal(await app.locator('.holotapeReader').innerText(),'Day 2');await click('save');
   await page.reload();await page.evaluate(()=>recordApps.holotapes.open());await field('list').getByText('EXPEDITION',{exact:true}).click();assert.equal(await app.locator('.holotapeReader').innerText(),'Day 2');
   assert.equal(await page.evaluate(()=>vaultFiles.get('/VAULT/NOTES/EXPEDITION.LOG').content),'Day 1\n<script>literal</script>');
   page.once('dialog',d=>d.accept('/CLASSIFIED/CLASSIFIED.DAT'));await click('import');assert.match(await app.locator('[role=status]').innerText(),/ACCESS DENIED/);
   page.once('dialog',d=>d.accept('/VAULT/REACTOR.DAT'));await click('import');assert.match(await field('body').inputValue(),/REACTOR DATABASE/);await click('save');
-  await click('note');assert.equal(await page.locator('#notesWindow').isVisible(),true);await page.locator('#notesWindow [data-action=save]').click();
   await page.evaluate(()=>recordApps.holotapes.open());await click('files');assert.match(await page.locator('#fileContent').inputValue(),/REACTOR DATABASE/);await page.locator('#fileClose').click();await page.evaluate(()=>recordApps.holotapes.open());
   page.once('dialog',d=>d.accept('Reactor tape'));await click('rename');assert.equal(await field('title').inputValue(),'REACTOR TAPE');
   await page.setViewportSize({width:390,height:844});assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);await page.screenshot({path:require('node:os').tmpdir()+'/fallout-holotapes-mobile.png'});

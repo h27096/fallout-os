@@ -1,6 +1,6 @@
 # Fallout OS — Personal Apps v0.6
 
-Open `index.html` in a browser, or serve this directory with a static web server. Start the system, then select **NOTES**, **HOLOTAPES**, or **MUSIC / RADIO** directly on the desktop. All three also have shortcuts in **FILES**. Browser v0.2 is still available through **VAULTNET** or `BROWSER`.
+Open `index.html` in a browser, or serve this directory with a static web server. Start the system, then select **HOLOTAPES** or **MUSIC / RADIO** directly on the desktop. Both also have shortcuts in **FILES**. Browser v0.2 is still available through **VAULTNET** or `BROWSER`.
 
 ## Files and terminal commands
 
@@ -28,21 +28,19 @@ Requires Node.js with `structuredClone` support. Run `node filesystem.test.cjs` 
 
 Coverage includes boot, terminal, browser navigation and blocked-frame fallback, Overseer login, logs, lockdown, filesystem CRUD, path resolution, persistence after reload, unsaved edits, protected records, quota rollback, stale writes, recovery from damaged storage, mobile overflow, duplicate IDs, and browser JavaScript errors.
 
-## Notes v0.4
+## Existing Notes data
 
-Select NOTES or type `NOTES`. Create, search, edit, rename and delete personal logs. SAVE (or Ctrl/Cmd+S) persists the record; closing or switching records checks unsaved changes. VIEW IN FILES opens the same record in File Explorer. Notes live in `/VAULT/NOTES/*.LOG` with exact plain-text content and are accessible through `OPEN`. Titles follow filesystem naming rules and are normalized to uppercase. Rename saved titles with RENAME. Storage errors retain the draft, and edits made in Files are detected before overwriting a loaded note.
-
-Run `node notes.test.cjs` for Notes interaction and persistence checks with the same Playwright setup above.
+The standalone Notes app, desktop and Files launchers, terminal app command, and Notes copy buttons have been removed. Existing `/VAULT/NOTES/*.LOG` records remain untouched in `robco.files.v1`. Read or edit them in Files, or use Holotapes **COPY FROM FILE** with the full note path and SAVE to create an independent tape. The original note is preserved; no migration or storage deletion runs.
 
 ## Holotapes v0.5
 
 Select HOLOTAPES or type `HOLOTAPES`. Saved tapes open in a read-only reader; EDIT TAPE switches to the editor, READ TAPE previews current text, and SAVE persists it. Tapes are plain-text `/VAULT/HOLOTAPES/*.DAT` records, intentionally compatible with Files and terminal OPEN. New tapes have no bundled copyrighted content.
 
-COPY TO HOLOTAPE in Notes copies the current text into a new tape draft. COPY TO NOTES does the reverse. COPY FROM FILE accepts a vault file path and respects Overseer permissions. Copies are independent, require SAVE, and never overwrite the source. Switching between these apps retains any draft in memory; closing, replacing a draft, or leaving the site guards unsaved text. `node holotapes.test.cjs` covers reading, editing, copies, permissions and persistence.
+COPY FROM FILE accepts a vault file path and respects Overseer permissions. Copies are independent, require SAVE, and never overwrite the source. Switching apps retains any draft in memory; closing, replacing a draft, or leaving the site guards unsaved text. `node holotapes.test.cjs` covers reading, editing, copies, permissions and persistence.
 
 ## Music / Radio v0.6
 
-Select MUSIC / RADIO or type `RADIO` or `MUSIC`. Create, rename and delete named stations/playlists; add direct HTTP(S) audio/stream URLs or select local audio files. Use ADD MUSIC to select multiple local audio files. Click a playlist track to start it, or use the existing PLAY/PAUSE control. Empty and non-audio files are skipped with feedback; unsupported codecs report a playback error. Use previous/next, pause, seek for finite media, volume, mute, shuffle and repeat (off/playlist/track). Reorder or remove tracks. Closing Radio pauses playback; switching to Notes or Holotapes keeps audio playing until Radio is paused or closed.
+Select MUSIC / RADIO or type `RADIO` or `MUSIC`. Create, rename and delete named stations/playlists; add direct HTTP(S) audio/stream URLs or select local audio files. Use ADD MUSIC to select multiple local audio files. Click a playlist track to start it, or use the existing PLAY/PAUSE control. Empty and non-audio files are skipped with feedback; unsupported codecs report a playback error. Use previous/next, pause, seek for finite media, volume, mute, shuffle and repeat (off/playlist/track). Reorder or remove tracks. Closing Radio pauses playback; switching to Holotapes keeps audio playing until Radio is paused or closed.
 
 The library starts empty. Only add media you own or have permission to access. No Fallout soundtrack or third-party stream is bundled. Video/website URLs do not work as audio sources. Network failures and unsupported formats report a signal error. Live streams may not offer seeking or a finite duration.
 
@@ -50,11 +48,11 @@ The library starts empty. Only add media you own or have permission to access. N
 
 `radio-store.js` owns validated metadata and the replaceable storage adapter; `radio.js` owns browser audio and local-file handles. Electron can replace these boundaries with IPC-backed storage and media paths. Existing Overseer gates remain application role checks, not encryption.
 
-Run `node radio-store.test.cjs` and `node radio.test.cjs`. The browser test generates its own short WAV signal and serves it locally; no external media is fetched. The complete regression suite is `filesystem.test.cjs`, `browser.test.cjs`, `explorer.test.cjs`, `notes.test.cjs`, `holotapes.test.cjs`, `radio-store.test.cjs`, and `radio.test.cjs`. All browser suites use Playwright with Microsoft Edge.
+Run `node radio-store.test.cjs` and `node radio.test.cjs`. The browser test generates its own short WAV signal and serves it locally; no external media is fetched. The complete regression suite is `filesystem.test.cjs`, `browser.test.cjs`, `explorer.test.cjs`, `records.test.cjs`, `holotapes.test.cjs`, `radio-store.test.cjs`, and `radio.test.cjs`. All browser suites use Playwright with Microsoft Edge.
 
 ## App access and playlist files
 
-The Files toolbar opens Notes and Holotapes even when their libraries are empty. When a record in `/VAULT/NOTES` or `/VAULT/HOLOTAPES` is selected, its corresponding shortcut opens that saved record in the app. Files keeps its plain-text editor. Unsaved changes are checked before transferring to an app. The fixed desktop app dock stays above every window, including on short screens.
+The Files toolbar opens Holotapes even when its library is empty. When a record in `/VAULT/HOLOTAPES` is selected, its corresponding shortcut opens that saved record in the app. Files keeps its plain-text editor. Unsaved changes are checked before transferring to an app. The fixed desktop app dock stays above every window, including on short screens.
 
 Radio's **SAVE PLAYLIST TO FILES** creates a new `.DAT` record in `/VAULT/MUSIC`. It contains a versioned `robco.playlist` JSON document with station metadata and media references, not audio bytes. Existing files are never overwritten. **COPY PLAYLIST FROM FILE** imports a validated independent playlist; alternatively select that file in Files and press **MUSIC / RADIO**. Other Files locations simply open the player. Local media must still be reselected. Invalid files, denied clearance and storage errors leave the saved radio library intact.
 
@@ -69,11 +67,17 @@ This follow-up retains all three original feature commits, adds explicit Files a
 
 ## Focused polish and bug-fix pass
 
-- All six windows share sizing, focus stacking and close-focus recovery. The desktop dock switches apps without hiding drafts; close buttons and Escape retain the existing discard checks. Terminal can be closed and reopened from the dock. On small screens, content scrolls within the available window area and close controls remain reachable.
-- Security, Reactor, Personnel and Logs shortcuts now live in the terminal and invoke existing commands with their existing clearance checks. They do not replace a pending password, log entry or typed command. The nonfunctional Settings placeholder was removed.
+- All five windows share sizing, focus stacking and close-focus recovery. The desktop dock switches apps without hiding drafts; close buttons and Escape retain the existing discard checks. Terminal can be closed and reopened from the dock. On small screens, content scrolls within the available window area and close controls remain reachable.
+- The Logs shortcut lives in the terminal and invokes the existing command with its clearance check. They do not replace a pending password, log entry or typed command. The nonfunctional Settings placeholder was removed.
 - Files reports unsaved changes and supports Ctrl/Cmd+S. The terminal scrolls to new output, ignores duplicate boot requests and preserves failed log-entry text.
 - Overseer logs use the same stale-write and damaged-storage protections as the other stores. Storage keys remain `vaultLogs`, `robco.files.v1` (Files, Notes, Holotapes and exported playlists), and `robco.radio.v1` (Radio metadata/settings). No data migration is performed. Unsaved drafts, Overseer clearance, lockdown, browser navigation and playback position remain session-only.
 - Radio retains track keyboard focus when redrawing, reports active playback or required local-file reselection on reopening, disables impossible reorder actions, and releases unused local audio URLs when a playlist is deleted. Closing pauses playback and invalidates pending playback feedback. Local music still stays on the device and must be reselected after reload.
 - Detached browser frames no longer update current navigation feedback; controls share visible keyboard focus and reduced-motion preferences are respected.
 
 Run `node --test *.test.cjs` with Playwright and Microsoft Edge available. The nine suites include `polish.test.cjs`, which checks duplicate boot prevention, window stacking, draft retention, close cancellation and focus, Files save feedback, terminal shortcuts, log conflicts/recovery, and 1280�720, 390�400 and 320�568 window geometry. Playback tests generate WAV audio locally. Browser embedding restrictions and codec support still depend on the browser/site.
+
+## Functional app simplification
+
+Based on polish commit `ecb6da5`, the desktop now contains Terminal, VaultNet Browser, Files, Holotapes and Music / Radio. Security, Reactor and Personnel have no app windows or launch buttons. Their existing terminal lore commands and built-in filesystem records remain for compatibility, with the same Overseer permissions. Shared window styling and record editor code remain in use by Holotapes and Radio. Storage keys, user holotapes, legacy notes, boot, Overseer and local music import are unchanged.
+
+The nine regression suites include legacy Notes preservation and independent import into Holotapes, absence of removed launchers/windows, and shared editor checks in `records.test.cjs`.

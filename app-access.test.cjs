@@ -17,7 +17,7 @@ const fs = require('node:fs'), http = require('node:http'), assert = require('no
         await page.locator('#desktopScreen').waitFor({state:'visible'});
         for (const size of [{width:1280,height:720}, {width:390,height:400}]) {
             await page.setViewportSize(size);
-            for (const [label, panel, close] of [['NOTES','notesWindow','CLOSE NOTES'], ['HOLOTAPES','holotapesWindow','CLOSE HOLOTAPES'], ['MUSIC / RADIO','radioWindow','CLOSE RADIO']]) {
+            for (const [label, panel, close] of [['HOLOTAPES','holotapesWindow','CLOSE HOLOTAPES'], ['MUSIC / RADIO','radioWindow','CLOSE RADIO']]) {
                 await page.locator('#desktopIcons').getByRole('button',{name:label,exact:true}).click();
                 assert.equal(await page.locator('#'+panel).isVisible(),true);
                 await page.getByRole('button',{name:close,exact:true}).click();

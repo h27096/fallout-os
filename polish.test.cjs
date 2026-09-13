@@ -19,22 +19,22 @@ const fs = require('node:fs'), http = require('node:http'), assert = require('no
         await page.clock.runFor(7100);
         assert.equal((await page.locator('#bootOutput').innerText()).match(/ROBCO TERMINAL READY/g).length, 1);
         const launch = name => page.locator('#desktopIcons').getByRole('button', { name, exact: true }).click();
-        await launch('NOTES');
-        await page.locator('#notesWindow [data-field=title]').fill('Draft');
-        await page.locator('#notesWindow [data-field=body]').fill('Keep this text');
+        await launch('HOLOTAPES');
+        await page.locator('#holotapesWindow [data-field=title]').fill('Draft');
+        await page.locator('#holotapesWindow [data-field=body]').fill('Keep this text');
         await launch('HOLOTAPES'); await launch('MUSIC / RADIO'); await launch('VAULTNET');
-        assert.equal(await page.locator('#notesWindow').isVisible(), true);
-        await launch('NOTES');
-        assert.equal(await page.locator('#notesWindow [data-field=body]').inputValue(), 'Keep this text');
+        assert.equal(await page.locator('#holotapesWindow').isVisible(), true);
+        await launch('HOLOTAPES');
+        assert.equal(await page.locator('#holotapesWindow [data-field=body]').inputValue(), 'Keep this text');
         assert.equal(await page.evaluate(() => {
-            const p = document.getElementById('notesWindow');
+            const p = document.getElementById('holotapesWindow');
             return document.elementFromPoint(50, p.getBoundingClientRect().top + 20).closest('section') === p;
         }), true);
         page.once('dialog', dialog => dialog.dismiss());
-        await page.locator('#notesWindow [data-field=search]').press('Escape');
-        assert.equal(await page.locator('#notesWindow').isVisible(), true);
-        await page.locator('#notesWindow [data-action=save]').click();
-        await page.locator('#notesWindow [data-action=files]').click();
+        await page.locator('#holotapesWindow [data-field=search]').press('Escape');
+        assert.equal(await page.locator('#holotapesWindow').isVisible(), true);
+        await page.locator('#holotapesWindow [data-action=save]').click();
+        await page.locator('#holotapesWindow [data-action=files]').click();
         await page.locator('#fileContent').fill('Saved from Files');
         assert.match(await page.locator('#fileStatus').innerText(), /UNSAVED/);
         await page.locator('#fileContent').press('Control+s');
@@ -42,7 +42,7 @@ const fs = require('node:fs'), http = require('node:http'), assert = require('no
         await page.locator('#fileClose').click();
         assert.equal(await page.evaluate(() => document.activeElement.getClientRects().length > 0), true);
         await launch('TERMINAL');
-        await page.getByRole('button', { name: 'SECURITY', exact: true }).click();
+        await page.getByRole('button', { name: 'LOGS', exact: true }).click();
         assert.match(await page.locator('#output').innerText(), /ACCESS DENIED/);
         async function command(value) { await page.locator('#command').fill(value); await page.locator('#command').press('Enter'); }
         await command('OVERSEER'); await command('PASSWORD'); await command('WRITELOG');
@@ -51,11 +51,11 @@ const fs = require('node:fs'), http = require('node:http'), assert = require('no
         assert.match(await page.locator('#output').innerText(), /changed in another tab/);
         assert.equal(await page.locator('#command').inputValue(), 'Keep my log draft');
         assert.deepEqual(await page.evaluate(() => JSON.parse(localStorage.getItem('vaultLogs'))), ['Other tab log']);
-        assert.equal(await page.evaluate(() => vaultFiles.get('/VAULT/NOTES/DRAFT.LOG').content), 'Saved from Files');
+        assert.equal(await page.evaluate(() => vaultFiles.get('/VAULT/HOLOTAPES/DRAFT.DAT').content), 'Saved from Files');
         // Every close control and launcher stays inside short, narrow viewports.
         for (const size of [{ width: 1280, height: 720 }, { width: 390, height: 400 }, { width: 320, height: 568 }]) {
             await page.setViewportSize(size);
-            for (const [name, id] of [['TERMINAL', 'terminalWindow'], ['VAULTNET', 'browserWindow'], ['FILES', 'explorerWindow'], ['NOTES', 'notesWindow'], ['HOLOTAPES', 'holotapesWindow'], ['MUSIC / RADIO', 'radioWindow']]) {
+            for (const [name, id] of [['TERMINAL', 'terminalWindow'], ['VAULTNET', 'browserWindow'], ['FILES', 'explorerWindow'], ['HOLOTAPES', 'holotapesWindow'], ['MUSIC / RADIO', 'radioWindow']]) {
                 await launch(name);
                 assert.equal(await page.evaluate(id => {
                     const panel = document.getElementById(id), rect = panel.getBoundingClientRect();

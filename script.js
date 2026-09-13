@@ -378,7 +378,7 @@ if(personalLogs.length > 0){
 }
 
 function showHelp(output){
-    output.innerHTML += '<br><br>PERSONAL APPS: NOTES | HOLOTAPES | RADIO (or MUSIC)<br>';
+    output.innerHTML += '<br><br>PERSONAL APPS: HOLOTAPES | RADIO (or MUSIC)<br>';
 
     if(overseerMode){
 

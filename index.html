@@ -26,14 +26,13 @@
         <button onclick="openTerminal()">TERMINAL</button>
         <button onclick="openBrowser()">VAULTNET</button>
         <button onclick="fileAction(() => openExplorer('/'))">FILES</button>
-        <button onclick="recordApps.notes.open()">NOTES</button>
         <button onclick="recordApps.holotapes.open()">HOLOTAPES</button>
         <button onclick="radio.open()">MUSIC / RADIO</button>
     </nav>
 
     <section id="terminalWindow" aria-label="RobCo terminal">
         <header class="fileTitle"><strong>ROBCO TERMINAL</strong><button onclick="RobcoWindows.close(document.getElementById('terminalWindow'))">CLOSE TERMINAL</button></header>
-        <nav class="fileToolbar" aria-label="Terminal shortcuts"><button onclick="terminalShortcut('SECURITY')">SECURITY</button><button onclick="terminalShortcut('REACTOR')">REACTOR</button><button onclick="terminalShortcut('OPEN /PERSONNEL/PERSONNEL.DAT')">PERSONNEL</button><button onclick="terminalShortcut('LOGS')">LOGS</button></nav>
+        <nav class="fileToolbar" aria-label="Terminal shortcuts"><button onclick="terminalShortcut('LOGS')">LOGS</button></nav>
         <div id="screen">
             <span id="output"></span><span id="cursor">_</span>
         </div>
@@ -80,8 +79,7 @@
         <button id="fileRoot">ROOT</button><button id="fileUp">UP</button>
         <button id="folderNew">NEW FOLDER</button><button id="fileNew">NEW FILE</button>
         <button id="fileRename">RENAME</button><button id="fileDelete">DELETE</button>
-        <button onclick="openRecordFromFiles('notes')">NOTES</button>
-        <button onclick="openRecordFromFiles('holotapes')">HOLOTAPES</button>
+        <button onclick="openHolotapeFromFiles()">HOLOTAPES</button>
         <button onclick="openRadioFromFiles()">MUSIC / RADIO</button>
     </nav>
     <div class="fileLocation"><strong id="filePath"></strong><small id="fileClearance"></small></div>
