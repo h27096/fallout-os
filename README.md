@@ -27,3 +27,9 @@ Failed storage writes leave the in-memory filesystem unchanged and report NOT SA
 Requires Node.js with `structuredClone` support. Run `node filesystem.test.cjs` for dependency-free service tests. For interaction tests, install Playwright in your development environment and ensure Microsoft Edge is available, then run `node browser.test.cjs` and `node explorer.test.cjs`. These tests serve the app locally and use isolated headless browser profiles; screenshots go to the OS temporary directory.
 
 Coverage includes boot, terminal, browser navigation and blocked-frame fallback, Overseer login, logs, lockdown, filesystem CRUD, path resolution, persistence after reload, unsaved edits, protected records, quota rollback, stale writes, recovery from damaged storage, mobile overflow, duplicate IDs, and browser JavaScript errors.
+
+## Notes v0.4
+
+Select NOTES or type `NOTES`. Create, search, edit, rename and delete personal logs. SAVE (or Ctrl/Cmd+S) persists the record; closing or switching records checks unsaved changes. VIEW IN FILES opens the same record in File Explorer. Notes live in `/VAULT/NOTES/*.LOG` with exact plain-text content and are accessible through `OPEN`. Titles follow filesystem naming rules and are normalized to uppercase. Rename saved titles with RENAME. Storage errors retain the draft, and edits made in Files are detected before overwriting a loaded note.
+
+Run `node notes.test.cjs` for Notes interaction and persistence checks with the same Playwright setup above.

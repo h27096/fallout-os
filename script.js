@@ -138,7 +138,7 @@ if(writingLog){
 
 }
         
-else if(fileTerminal(command)){
+else if(recordTerminal(command) || fileTerminal(command)){
     // Shared filesystem routing.
 }
 

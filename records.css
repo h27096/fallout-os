@@ -1,0 +1,15 @@
+.recordWindow { position: fixed; inset: 5%; z-index: 12; display: flex; flex-direction: column; background: #050b05; border: 2px solid #33ff33; box-shadow: 0 0 28px #33ff3333; overflow: auto; }
+.recordWorkspace { display: flex; flex: 1; min-height: 200px; border-block: 1px solid; }
+.recordWorkspace aside { width: 28%; min-width: 180px; padding: 16px; box-sizing: border-box; overflow: auto; border-right: 1px solid; }
+.recordWorkspace main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 12px; padding: 16px; }
+.recordWindow label { display: flex; flex-direction: column; gap: 8px; }
+.recordWindow input, .recordWindow textarea, .recordWindow select { box-sizing: border-box; min-width: 0; width: 100%; background: #050505; color: #b0ffb0; border: 1px solid #33ff33; padding: 10px; font: 15px/1.5 "Courier New", monospace; }
+.recordWindow textarea { flex: 1; min-height: 180px; resize: vertical; }
+.recordWindow [data-field="bodyLabel"] { flex: 1; }
+.recordWindow [data-field="list"] { margin-top: 16px; }
+.recordWindow [data-field="list"] button { display: block; width: 100%; text-align: left; margin-block: 8px; overflow-wrap: anywhere; }
+.recordWindow button[aria-pressed="true"] { background: #1a421a; color: #d2ffd2; }
+.recordWindow small, .recordStatus { overflow-wrap: anywhere; }
+.recordStatus { margin: 0; padding: 12px 16px; }
+.recordWindow :focus-visible { outline: 2px solid #b0ffb0; outline-offset: 2px; }
+@media(max-width: 600px) { .recordWindow { inset: 8px; } .recordWorkspace { flex-direction: column; } .recordWorkspace aside { width: 100%; max-height: 175px; flex-shrink: 0; border-right: 0; border-bottom: 1px solid; } .recordWindow .fileTitle { align-items: start; } }

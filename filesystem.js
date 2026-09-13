@@ -92,13 +92,14 @@
                     (nodes[a].type === nodes[b].type ? a.localeCompare(b) : nodes[a].type === 'folder' ? -1 : 1)
                 ).map(p => ({ path: p, name: p.split('/').pop(), type: nodes[p].type, locked: restricted(p) && !isOverseer() }));
             },
-            create(path, name, type) {
+            create(path, name, type, content = '') {
                 if (!['folder', 'file'].includes(type)) throw Error('INVALID TYPE.');
+                if (typeof content !== 'string' || content.length > 200000) throw Error('File limit: 200,000 characters.');
                 if (writable(path).type !== 'folder') throw Error('NOT A FOLDER.');
                 const target = normalize(validName(name, type), path);
                 if (nodes[target]) throw Error('NAME ALREADY EXISTS.');
                 check(target);
-                commit({ ...nodes, [target]: { type, ...(type === 'file' ? { content: '' } : {}) } });
+                commit({ ...nodes, [target]: { type, ...(type === 'file' ? { content } : {}) } });
                 return target;
             },
             write(path, content) {
