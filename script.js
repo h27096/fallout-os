@@ -1,8 +1,10 @@
-let personalLogs = [];
+let personalLogs = [], logsSnapshot = null, logsWarning = "";
 try {
-    const savedLogs = JSON.parse(localStorage.getItem("vaultLogs"));
-    if (Array.isArray(savedLogs)) personalLogs = savedLogs.filter(log => typeof log === "string");
-} catch { /* Unavailable or malformed logs must not prevent boot. */ }
+    logsSnapshot = localStorage.getItem("vaultLogs");
+    const savedLogs = JSON.parse(logsSnapshot);
+    if (logsSnapshot !== null && (!Array.isArray(savedLogs) || savedLogs.some(log => typeof log !== "string"))) throw Error("Invalid logs");
+    personalLogs = savedLogs || [];
+} catch { logsWarning = "Saved logs unavailable or damaged. Existing data preserved; reload after recovery."; }
 function escapeTerminalText(text) {
     return String(text).replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;');
 }
@@ -12,7 +14,10 @@ let waitingForPassword = false;
 let failedAttempts = 0;
 let lockdownActive = false;
 
+let bootStarted = false;
 function boot() {
+    if (bootStarted) return;
+    bootStarted = true;
     document.getElementById("startupScreen").style.display = "none";
     document.getElementById("desktopScreen").style.display = "none";
     document.getElementById("browserWindow").style.display = "none";
@@ -50,8 +55,9 @@ function boot() {
 }
 
 function runCommand(){
+    if (document.getElementById("command").disabled) return;
 
-    let command = document.getElementById("command").value.toUpperCase();
+    let command = document.getElementById("command").value.trim().toUpperCase();
 
     let output = document.getElementById("output");
 
@@ -118,12 +124,15 @@ function runCommand(){
 if(writingLog){
 
     try {
+        if (logsWarning) throw Error(logsWarning);
+        if (localStorage.getItem("vaultLogs") !== logsSnapshot) throw Error("Logs changed in another tab. Reload before saving.");
         const nextLogs = personalLogs.concat(command);
-        localStorage.setItem("vaultLogs", JSON.stringify(nextLogs));
+        const value = JSON.stringify(nextLogs);
+        localStorage.setItem("vaultLogs", value);
+        logsSnapshot = value;
         personalLogs = nextLogs;
-    } catch {
-        output.innerHTML += "<br><br>LOG NOT SAVED. Storage is unavailable or full; retry or reload to cancel.";
-        document.getElementById("command").value = "";
+    } catch (error) {
+        output.innerHTML += "<br><br>LOG NOT SAVED. " + escapeTerminalText(error.message) + " Copy your text before reloading.";
         return;
     }
 
@@ -180,7 +189,7 @@ else if(command == "OVERSEER"){
 
     waitingForPassword = true;
 
-    console.log("Waiting for password:", waitingForPassword);
+
 
 }
     
@@ -245,6 +254,7 @@ else if(command == "LOGS"){
         "<br>Vault operation began successfully." +
         "<br><br>LOG 002:" +
         "<br>Unknown events detected.";
+if (logsWarning) output.innerHTML += "<br><br>" + escapeTerminalText(logsWarning);
 if(personalLogs.length > 0){
 
     output.innerHTML +=
@@ -413,18 +423,15 @@ function showHelp(output){
 const browserHistory = ["vaultnet://home"];
 let browserHistoryIndex = 0;
 let browserTimer;
-let browserReturnFocus;
+
 function launchBrowser() { openBrowser(); }
 function openBrowser() {
-    browserReturnFocus = document.activeElement;
-    document.getElementById("browserWindow").style.display = "flex";
+    RobcoWindows.show(document.getElementById("browserWindow"));
     if (!document.getElementById("browserAddress").value) renderBrowser();
     document.getElementById("browserAddress").focus();
 }
 function closeBrowser() {
-    document.getElementById("browserWindow").style.display = "none";
-    if (browserReturnFocus && !browserReturnFocus.disabled) browserReturnFocus.focus();
-    else document.getElementById("command").focus();
+    RobcoWindows.close(document.getElementById("browserWindow"));
 }
 function browserNavigate(value) {
     const address = value.trim();
@@ -477,11 +484,13 @@ function renderBrowser() {
     status.textContent = home ? "VAULTNET READY. ENTER A WEB ADDRESS." : "CONNECTING TO " + address;
     if (home) return;
     frame.addEventListener("load", function() {
+        if (!frame.isConnected) return;
         clearTimeout(browserTimer);
         // Blocked frames can fire load too; never report a guaranteed success.
         status.textContent = "ADDRESS REQUESTED. If the page is blank or refused, use OPEN IN NEW TAB.";
     });
     frame.addEventListener("error", function() {
+        if (!frame.isConnected) return;
         clearTimeout(browserTimer);
         status.textContent = "PAGE UNAVAILABLE HERE. Try OPEN IN NEW TAB.";
     });
@@ -503,3 +512,23 @@ document.getElementById("command").addEventListener("keydown", function(event) {
 document.getElementById("browserWindow").addEventListener("keydown", function(event) {
     if (event.key === "Escape") closeBrowser();
 });
+
+function openTerminal() {
+    RobcoWindows.show(document.getElementById('terminalWindow'));
+    document.getElementById('command').focus();
+}
+function terminalShortcut(command) {
+    const input = document.getElementById('command');
+    if (input.disabled) return;
+    if (waitingForPassword || writingLog || input.value.trim()) { input.focus(); return; }
+    input.value = command;
+    runCommand();
+}
+RobcoWindows.register(document.getElementById('terminalWindow'));
+document.getElementById('terminalWindow').addEventListener('keydown', event => {
+    if (event.key === 'Escape') RobcoWindows.close(document.getElementById('terminalWindow'));
+});
+new MutationObserver(() => {
+    const screen = document.getElementById('screen');
+    screen.scrollTop = screen.scrollHeight;
+}).observe(document.getElementById('output'), { childList: true, subtree: true });

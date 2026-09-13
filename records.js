@@ -24,7 +24,7 @@ function createRecordApp({ id, name, version, directory, extension, reader = fal
         const control = document.createElement('button'); control.dataset.action = key; control.textContent = label;
         control.onclick = () => action(fn); panel.querySelector('.fileToolbar').append(control); return control;
     }
-    let selected = null, original = '', originalTitle = '', returnFocus;
+    let selected = null, original = '', originalTitle = '';
     const status = text => { panel.querySelector('[role="status"]').textContent = text; };
     const dirty = () => field('body').value !== original || field('title').value !== originalTitle;
     const discard = () => !dirty() || confirm('Discard unsaved ' + name.toLowerCase() + ' changes?');
@@ -72,7 +72,7 @@ function createRecordApp({ id, name, version, directory, extension, reader = fal
     }
     button('new').onclick = () => action(() => { if (discard()) reset(); });
     button('save').onclick = () => action(save);
-    button('close').onclick = () => { if (discard()) { field('body').value = original; field('title').value = originalTitle; mode(true); panel.hidden = true; (returnFocus || document.getElementById('command')).focus(); } };
+    button('close').onclick = () => { if (discard()) { field('body').value = original; field('title').value = originalTitle; mode(true); RobcoWindows.close(panel); } };
     button('rename').onclick = () => action(() => {
         if (!discard()) return;
         const title = prompt('New record title:', originalTitle); if (title === null) return;
@@ -93,7 +93,7 @@ function createRecordApp({ id, name, version, directory, extension, reader = fal
     if (reader) { addAction('read', 'READ TAPE', () => mode(true)); addAction('edit', 'EDIT TAPE', () => { mode(false); field('body').focus(); }); }
     return { panel, field, button, status, action, dirty, discard, reset, addAction,
         get selected() { return selected; },
-        open() { returnFocus = document.activeElement; for (const app of Object.values(recordApps)) app.panel.hidden = true; panel.hidden = false; action(list); status(vaultFiles.warning || (dirty() ? 'UNSAVED DRAFT.' : 'READY. Create or select a record.')); field('search').focus(); },
+        open() { RobcoWindows.show(panel); action(list); status(vaultFiles.warning || (dirty() ? 'UNSAVED DRAFT.' : 'READY. Create or select a record.')); field('search').focus({ preventScroll: true }); },
         openFile(path) { if (!discard()) return false; load(path); this.open(); return true; },
         draft(title, body) { if (!discard()) return false; this.open(); action(() => reset(title, body)); return true; }
     };

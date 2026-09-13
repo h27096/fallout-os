@@ -22,5 +22,32 @@
 .holotapeReader { white-space: pre-wrap; overflow-wrap: anywhere; font: 16px/1.8 "Courier New", monospace; color: #d2ffd2; border: 1px dashed #33ff33; padding: 20px; margin: 0; flex: 1; background: repeating-linear-gradient(0deg, #10251033 0, #10251033 1px, transparent 1px, transparent 4px); }
 .recordWindow :focus-visible { outline: 2px solid #b0ffb0; outline-offset: 2px; }
 #desktopScreen { overflow-y: auto; }
-#terminalWindow { position: relative; left: auto; bottom: auto; margin-top: 24px; }
+
 @media(max-width: 600px) { .recordWindow { inset: 8px; } .recordWorkspace { flex-direction: column; } .recordWorkspace aside { width: 100%; max-height: 175px; flex-shrink: 0; border-right: 0; border-bottom: 1px solid; } .recordWindow .fileTitle { align-items: start; } }
+
+/* One reachable desktop dock and one window geometry across all apps. */
+#desktopIcons { position: fixed; top: 48px; left: 16px; right: 16px; z-index: 100; background: #050505; padding: 8px 0; }
+#desktopIcons button { flex: 0 1 auto; }
+#terminalWindow, #browserWindow, #explorerWindow, .recordWindow {
+    position: fixed; inset: 110px 20px 20px; width: auto; margin: 0;
+    box-sizing: border-box; border: 2px solid #33ff33; background: #050b05;
+    box-shadow: 0 0 28px #33ff3333; overflow: auto;
+}
+.fileTitle, #browserTitleBar { flex-shrink: 0; position: sticky; top: 0; z-index: 1; }
+.fileTitle > div, #browserTitleBar > div { min-width: 0; overflow-wrap: anywhere; }
+.fileTitle > button, #browserTitleBar > button { flex-shrink: 0; }
+.fileToolbar, #browserControls, #addressForm, .recordStatus, #fileStatus, #commandRow { flex-shrink: 0; }
+button, input, select, textarea, summary { font-family: inherit; }
+button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible, summary:focus-visible { outline: 2px solid #b0ffb0; outline-offset: 2px; }
+button:disabled:hover { background: #050505; color: #33ff33; }
+@media (max-width: 600px) {
+    #desktopIcons { top: 42px; left: 8px; right: 8px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
+    #desktopIcons button { min-width: 0; padding: 10px 4px; font-size: 12px; }
+    #terminalWindow, #browserWindow, #explorerWindow, .recordWindow { inset: 148px 8px 8px; }
+    .fileTitle, #browserTitleBar { padding: 10px; gap: 8px; }
+    .fileTitle strong, #browserTitleBar strong { font-size: 14px; letter-spacing: 1px; }
+    .fileTitle > button, #browserTitleBar > button { max-width: 45%; }
+    .fileToolbar { padding: 8px; gap: 6px; }
+}
+@supports (height: 100dvh) { #desktopScreen { height: 100dvh; } }
+@media (prefers-reduced-motion: reduce) { #cursor { animation: none; } }

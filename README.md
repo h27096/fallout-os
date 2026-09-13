@@ -54,7 +54,7 @@ Run `node radio-store.test.cjs` and `node radio.test.cjs`. The browser test gene
 
 ## App access and playlist files
 
-The Files toolbar opens Notes and Holotapes even when their libraries are empty. When a record in `/VAULT/NOTES` or `/VAULT/HOLOTAPES` is selected, its corresponding shortcut opens that saved record in the app. Files keeps its plain-text editor. Unsaved changes are checked before transferring to an app. The desktop scrolls on short screens so the terminal cannot cover launch buttons.
+The Files toolbar opens Notes and Holotapes even when their libraries are empty. When a record in `/VAULT/NOTES` or `/VAULT/HOLOTAPES` is selected, its corresponding shortcut opens that saved record in the app. Files keeps its plain-text editor. Unsaved changes are checked before transferring to an app. The fixed desktop app dock stays above every window, including on short screens.
 
 Radio's **SAVE PLAYLIST TO FILES** creates a new `.DAT` record in `/VAULT/MUSIC`. It contains a versioned `robco.playlist` JSON document with station metadata and media references, not audio bytes. Existing files are never overwritten. **COPY PLAYLIST FROM FILE** imports a validated independent playlist; alternatively select that file in Files and press **MUSIC / RADIO**. Other Files locations simply open the player. Local media must still be reselected. Invalid files, denied clearance and storage errors leave the saved radio library intact.
 
@@ -65,3 +65,15 @@ Run `node app-access.test.cjs` for actual desktop launch clicks at desktop and s
 At inspection, `main` ended at `491ea0f` (File Explorer v0.3). The separate `sprint/notes-holotapes-radio` branch already contained `602befa` (Notes), `1c26c48` (Holotapes), and `1e5faa5` (Music/Radio), including desktop buttons and tests. Those apps were implemented but had not reached main. The exact version loaded in a user's existing browser session cannot be inferred from repository history alone.
 
 This follow-up retains all three original feature commits, adds explicit Files app shortcuts and playlist file integration, and prevents the terminal from overlapping desktop launchers on short screens. It does not change existing storage keys or rewrite user records. All eight suites above passed, including the existing Browser, Files, boot, terminal, Overseer, logs and lockdown regressions, and real local/URL WAV playback.
+
+
+## Focused polish and bug-fix pass
+
+- All six windows share sizing, focus stacking and close-focus recovery. The desktop dock switches apps without hiding drafts; close buttons and Escape retain the existing discard checks. Terminal can be closed and reopened from the dock. On small screens, content scrolls within the available window area and close controls remain reachable.
+- Security, Reactor, Personnel and Logs shortcuts now live in the terminal and invoke existing commands with their existing clearance checks. They do not replace a pending password, log entry or typed command. The nonfunctional Settings placeholder was removed.
+- Files reports unsaved changes and supports Ctrl/Cmd+S. The terminal scrolls to new output, ignores duplicate boot requests and preserves failed log-entry text.
+- Overseer logs use the same stale-write and damaged-storage protections as the other stores. Storage keys remain `vaultLogs`, `robco.files.v1` (Files, Notes, Holotapes and exported playlists), and `robco.radio.v1` (Radio metadata/settings). No data migration is performed. Unsaved drafts, Overseer clearance, lockdown, browser navigation and playback position remain session-only.
+- Radio retains track keyboard focus when redrawing, reports active playback or required local-file reselection on reopening, disables impossible reorder actions, and releases unused local audio URLs when a playlist is deleted. Closing pauses playback and invalidates pending playback feedback. Local music still stays on the device and must be reselected after reload.
+- Detached browser frames no longer update current navigation feedback; controls share visible keyboard focus and reduced-motion preferences are respected.
+
+Run `node --test *.test.cjs` with Playwright and Microsoft Edge available. The nine suites include `polish.test.cjs`, which checks duplicate boot prevention, window stacking, draft retention, close cancellation and focus, Files save feedback, terminal shortcuts, log conflicts/recovery, and 1280�720, 390�400 and 320�568 window geometry. Playback tests generate WAV audio locally. Browser embedding restrictions and codec support still depend on the browser/site.

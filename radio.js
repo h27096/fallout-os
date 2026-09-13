@@ -4,7 +4,7 @@ const radio = (() => {
     const panel = document.getElementById('radioWindow');
     const el = id => document.getElementById('radio' + id);
     const audio = el('Audio'), files = new Map();
-    let loadedId = null, generation = 0, returnFocus;
+    let loadedId = null, generation = 0;
     const state = () => store.state;
     const station = () => state().stations.find(item => item.id === state().stationId);
     const current = () => station().tracks.find(item => item.id === state().trackId);
@@ -35,16 +35,22 @@ const radio = (() => {
         const path = prompt('Vault playlist path:', '/VAULT/MUSIC/PLAYLIST.DAT');
         if (path !== null) importPlaylist(vaultFiles.resolve(path));
     });
+    function releaseUnusedFiles() {
+        const used = new Set(state().stations.flatMap(item => item.tracks.filter(track => track.kind === 'local').map(track => track.fileKey)));
+        for (const [key, url] of files) if (!used.has(key)) { URL.revokeObjectURL(url); files.delete(key); }
+    }
     function stop() { generation++; audio.pause(); audio.removeAttribute('src'); audio.load(); loadedId = null; progress(); }
     function render() {
         const data = state(), selected = station(), track = current();
         el('Station').replaceChildren(...data.stations.map(item => new Option(item.name, item.id, false, item.id === data.stationId)));
-        const list = el('Tracks'); list.replaceChildren();
+        const list = el('Tracks'), focusedId = list.contains(document.activeElement) ? document.activeElement.dataset.trackId : null; list.replaceChildren();
         for (const item of selected.tracks) {
             const button = document.createElement('button'); button.textContent = item.title + (item.kind === 'local' && !files.has(item.fileKey) ? ' [RESELECT FILE]' : '');
+            button.dataset.trackId = item.id;
             button.setAttribute('aria-pressed', String(item.id === data.trackId));
             button.onclick = () => action(() => { update(next => { next.trackId = item.id; }); stop(); void play(); });
             list.append(button);
+            if (item.id === focusedId) button.focus({ preventScroll: true });
         }
         if (!selected.tracks.length) list.textContent = 'NO SIGNAL SOURCES. Add an audio URL or choose local audio files.';
         el('Now').textContent = track ? track.title : 'STANDING BY';
@@ -52,7 +58,9 @@ const radio = (() => {
         audio.volume = data.volume; audio.muted = data.muted;
         el('Volume').value = data.volume; el('Mute').textContent = data.muted ? 'UNMUTE' : 'MUTE'; el('Mute').setAttribute('aria-pressed', String(data.muted));
         el('Shuffle').setAttribute('aria-pressed', String(data.shuffle)); el('Repeat').value = data.repeat;
-        for (const name of ['Play', 'Remove', 'Up', 'Down']) el(name).disabled = !track;
+        for (const name of ['Play', 'Remove']) el(name).disabled = !track;
+        const index = selected.tracks.findIndex(item => item.id === data.trackId);
+        el('Up').disabled = index <= 0; el('Down').disabled = index < 0 || index >= selected.tracks.length - 1;
         el('Previous').disabled = el('Next').disabled = !selected.tracks.length;
         el('DeleteStation').disabled = data.stations.length === 1;
         el('Play').textContent = audio.paused ? 'PLAY' : 'PAUSE';
@@ -92,7 +100,7 @@ const radio = (() => {
         const time = seconds => Math.floor(seconds / 60) + ':' + String(Math.floor(seconds % 60)).padStart(2, '0');
         el('Time').textContent = time(audio.currentTime || 0) + ' / ' + (finite ? time(audio.duration) : '--:-- / STREAM');
     }
-    el('Close').onclick = () => { audio.pause(); panel.hidden = true; (returnFocus || document.getElementById('command')).focus(); };
+    el('Close').onclick = () => { generation++; audio.pause(); status('PAUSED.'); RobcoWindows.close(panel); };
     el('Play').onclick = () => void play();
     el('Previous').onclick = () => action(() => move(-1)); el('Next').onclick = () => action(() => move(1));
     el('Station').onchange = () => action(() => { const id = el('Station').value; update(next => { next.stationId = id; next.trackId = next.stations.find(item => item.id === id).tracks[0]?.id || null; }); stop(); status('STATION SELECTED.'); });
@@ -103,7 +111,7 @@ const radio = (() => {
     el('RenameStation').onclick = () => action(() => { const name = prompt('Station / playlist name:', station().name); if (name !== null) update(next => { next.stations.find(item => item.id === next.stationId).name = name.trim(); }); });
     el('DeleteStation').onclick = () => action(() => {
         if (!confirm('Delete this playlist and its entries? Original media files are not deleted.')) return;
-        update(next => { next.stations = next.stations.filter(item => item.id !== next.stationId); next.stationId = next.stations[0].id; next.trackId = next.stations[0].tracks[0]?.id || null; }); stop(); status('STATION DELETED.');
+        update(next => { next.stations = next.stations.filter(item => item.id !== next.stationId); next.stationId = next.stations[0].id; next.trackId = next.stations[0].tracks[0]?.id || null; }); stop(); releaseUnusedFiles(); status('STATION DELETED.');
     });
     el('AddURL').onsubmit = event => { event.preventDefault(); action(() => {
         const url = RobcoRadioStore.mediaURL(el('URL').value.trim()), title = el('Title').value.trim() || new URL(url).pathname.split('/').pop() || 'RADIO STREAM';
@@ -150,7 +158,7 @@ const radio = (() => {
     for (const event of ['timeupdate', 'durationchange', 'loadedmetadata', 'emptied']) audio.addEventListener(event, progress);
     panel.addEventListener('keydown', event => { if (event.key === 'Escape') el('Close').click(); });
     render(); progress();
-    return { open() { returnFocus = document.activeElement; for (const app of Object.values(recordApps)) app.panel.hidden = true; panel.hidden = false; render(); status(store.warning || 'READY. Use media you own or have permission to stream.'); el('Station').focus(); }, importPlaylist, panel };
+    return { open() { RobcoWindows.show(panel); render(); status(store.warning || (!audio.paused ? 'PLAYING.' : current()?.kind === 'local' && !files.has(current().fileKey) ? 'RESELECT LOCAL FILES using ADD MUSIC. Playlist entries are saved; audio access lasts for this session.' : 'READY. Press PLAY to resume or choose a track.')); el('Station').focus({ preventScroll: true }); }, importPlaylist, panel };
 })();
 recordApps.radio = radio;
 

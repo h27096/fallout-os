@@ -7,7 +7,7 @@ const vaultFiles = RobcoFilesystem.create({
     personalLogs.map((text, i) => '\nPERSONAL LOG ' + (i + 1) + ': ' + text).join('\n') +
     (lockdownActive ? '\nLOCKDOWN INITIATED BY OVERSEER. SECURITY EVENT RECORDED.' : ''));
 let terminalDirectory = '/';
-let explorerDirectory = '/', explorerFile = null, explorerOriginal = '', explorerReturnFocus;
+let explorerDirectory = '/', explorerFile = null, explorerOriginal = '';
 const fileElement = id => document.getElementById(id);
 function fileStatus(message) { fileElement('fileStatus').textContent = message; }
 function fileAction(action) { try { action(); } catch (error) { fileStatus(error.message); } }
@@ -17,18 +17,16 @@ function discardFileChanges() {
 function openExplorer(path = explorerDirectory) {
     const node = vaultFiles.get(path);
     if (!discardFileChanges()) return;
-    if (fileElement('explorerWindow').hidden) explorerReturnFocus = document.activeElement;
     explorerFile = node.type === 'file' ? path : null;
     explorerDirectory = explorerFile ? vaultFiles.parent(path) : path;
-    fileElement('explorerWindow').hidden = false;
+    RobcoWindows.show(fileElement('explorerWindow'));
     renderExplorer();
-    fileElement('fileUp').focus();
+    fileElement('fileUp').focus({ preventScroll: true });
 }
 function closeExplorer() {
     if (!discardFileChanges()) return;
-    fileElement('explorerWindow').hidden = true;
     explorerFile = null;
-    (explorerReturnFocus || fileElement('command')).focus();
+    RobcoWindows.close(fileElement('explorerWindow'));
 }
 function renderExplorer() {
     const listing = vaultFiles.list(explorerDirectory);
@@ -94,7 +92,11 @@ fileElement('fileDelete').addEventListener('click', () => fileAction(() => {
     if (terminalDirectory === path) terminalDirectory = vaultFiles.parent(path);
     explorerFile = null; openExplorer(vaultFiles.parent(path));
 }));
-fileElement('explorerWindow').addEventListener('keydown', event => { if (event.key === 'Escape') closeExplorer(); });
+fileElement('fileContent').addEventListener('input', () => fileStatus(fileElement('fileContent').value !== explorerOriginal ? 'UNSAVED CHANGES.' : 'SAVED RECORD.'));
+fileElement('explorerWindow').addEventListener('keydown', event => {
+    if (event.key === 'Escape') closeExplorer();
+    if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 's') { event.preventDefault(); fileElement('fileSave').click(); }
+});
 window.addEventListener('beforeunload', event => {
     if (explorerFile && fileElement('fileContent').value !== explorerOriginal) { event.preventDefault(); event.returnValue = ''; }
 });
