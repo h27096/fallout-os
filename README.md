@@ -42,7 +42,7 @@ COPY TO HOLOTAPE in Notes copies the current text into a new tape draft. COPY TO
 
 ## Music / Radio v0.6
 
-Select MUSIC / RADIO or type `RADIO` or `MUSIC`. Create, rename and delete named stations/playlists; add direct HTTP(S) audio/stream URLs or select local audio files. Playback starts only after PLAY. Use previous/next, pause, seek for finite media, volume, mute, shuffle and repeat (off/playlist/track). Reorder or remove tracks. Closing Radio pauses playback; switching to Notes or Holotapes keeps audio playing until Radio is paused or closed.
+Select MUSIC / RADIO or type `RADIO` or `MUSIC`. Create, rename and delete named stations/playlists; add direct HTTP(S) audio/stream URLs or select local audio files. Use ADD MUSIC to select multiple local audio files. Click a playlist track to start it, or use the existing PLAY/PAUSE control. Empty and non-audio files are skipped with feedback; unsupported codecs report a playback error. Use previous/next, pause, seek for finite media, volume, mute, shuffle and repeat (off/playlist/track). Reorder or remove tracks. Closing Radio pauses playback; switching to Notes or Holotapes keeps audio playing until Radio is paused or closed.
 
 The library starts empty. Only add media you own or have permission to access. No Fallout soundtrack or third-party stream is bundled. Video/website URLs do not work as audio sources. Network failures and unsupported formats report a signal error. Live streams may not offer seeking or a finite duration.
 

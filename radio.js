@@ -43,7 +43,7 @@ const radio = (() => {
         for (const item of selected.tracks) {
             const button = document.createElement('button'); button.textContent = item.title + (item.kind === 'local' && !files.has(item.fileKey) ? ' [RESELECT FILE]' : '');
             button.setAttribute('aria-pressed', String(item.id === data.trackId));
-            button.onclick = () => action(() => { update(next => { next.trackId = item.id; }); stop(); status('SELECTED. Press PLAY.'); });
+            button.onclick = () => action(() => { update(next => { next.trackId = item.id; }); stop(); void play(); });
             list.append(button);
         }
         if (!selected.tracks.length) list.textContent = 'NO SIGNAL SOURCES. Add an audio URL or choose local audio files.';
@@ -62,7 +62,7 @@ const radio = (() => {
         if (!audio.paused) { audio.pause(); status('PAUSED.'); return; }
         if (loadedId !== track.id || audio.error) {
             const source = track.kind === 'url' ? RobcoRadioStore.mediaURL(track.url) : files.get(track.fileKey);
-            if (!source) { status('RESELECT THIS LOCAL FILE using CHOOSE AUDIO FILES, then press PLAY.'); return; }
+            if (!source) { status('RESELECT THIS LOCAL FILE using ADD MUSIC, then click the track or press PLAY.'); return; }
             stop(); audio.src = source; loadedId = track.id;
         }
         const token = generation;
@@ -110,17 +110,21 @@ const radio = (() => {
         const id = uid(); update(next => { next.stations.find(item => item.id === next.stationId).tracks.push({ id, title, kind: 'url', url }); next.trackId ||= id; });
         el('URL').value = ''; el('Title').value = ''; status('AUDIO SOURCE SAVED. Press PLAY to connect.');
     }); };
+    el('AddMusic').onclick = () => el('Files').click();
     el('Files').onchange = () => action(() => {
         const selectedFiles = Array.from(el('Files').files);
-        const accepted = selectedFiles.filter(file => file.type.startsWith('audio/') || /\.(mp3|wav|ogg|m4a|aac|flac|opus)$/i.test(file.name));
-        if (!accepted.length) throw Error('Choose supported audio files.');
+        // Reset even on validation/storage failure so the same selection can be retried.
+        el('Files').value = '';
+        if (!selectedFiles.length) return;
+        const accepted = selectedFiles.filter(file => file.size > 0 && (file.type.startsWith('audio/') || /\.(mp3|wav|ogg|m4a|aac|flac|opus|webm)$/i.test(file.name)));
+        const skipped = selectedFiles.length - accepted.length;
+        if (!accepted.length) throw Error('NO AUDIO ADDED. Empty or unsupported files; choose MP3, WAV, M4A or other browser-compatible audio.');
         const entries = accepted.map(file => ({ id: uid(), title: file.name.slice(0, 200), kind: 'local', fileKey: fileKey(file) }));
         store.update(next => { const target = next.stations.find(item => item.id === next.stationId); for (const item of entries) if (!target.tracks.some(track => track.kind === 'local' && track.fileKey === item.fileKey)) target.tracks.push(item); next.trackId ||= target.tracks[0]?.id || null; });
         for (const file of accepted) {
-            const key = fileKey(file); if (files.has(key)) URL.revokeObjectURL(files.get(key)); files.set(key, URL.createObjectURL(file));
+            const key = fileKey(file); if (!files.has(key)) files.set(key, URL.createObjectURL(file));
         }
-        if (current()?.kind === 'local' && accepted.some(file => fileKey(file) === current().fileKey)) stop();
-        el('Files').value = ''; render(); status('LOCAL MEDIA READY. Playlist saved; reselect files after a reload.');
+        render(); status('LOCAL MEDIA READY. Click a track or press PLAY. Reselect files after a reload.' + (skipped ? ' SKIPPED ' + skipped + ' empty or unsupported file(s).' : ''));
     });
     el('Remove').onclick = () => action(() => {
         if (!confirm('Remove the selected track from this playlist?')) return;
