@@ -93,3 +93,37 @@ Run `node --test *.test.cjs` with Playwright and Microsoft Edge available. The n
 Based on polish commit `ecb6da5`, the desktop now contains Terminal, VaultNet Browser, Files, Holotapes and Music / Radio. Security, Reactor and Personnel have no app windows or launch buttons. Their existing terminal lore commands and built-in filesystem records remain for compatibility, with the same Overseer permissions. Shared window styling and record editor code remain in use by Holotapes and Radio. Storage keys, user holotapes, legacy notes, boot, Overseer and local music import are unchanged.
 
 The nine regression suites include legacy Notes preservation and independent import into Holotapes, absence of removed launchers/windows, and shared editor checks in `records.test.cjs`.
+
+## Windows desktop (Electron)
+
+Install Node.js 22 LTS or newer (including npm), then in this directory run:
+
+```powershell
+npm ci
+npm start
+```
+
+`npm run desktop` is an alias. The same HTML/CSS/JavaScript powers both versions.
+For the website, run `npm run web` and open http://127.0.0.1:8080, or keep
+hosting the root static assets as before. No web build step is required.
+
+On Windows, create an unpacked app with `npm run pack:win`, or create both
+an installer and portable executable with `npm run build:win`. Outputs go to
+`dist/`. These commands never publish. Signing credentials are not required;
+the resulting executables are unsigned and Windows may show an unknown-publisher
+warning. Portable means no installation, not portable user data.
+
+The desktop stores data in its own Electron profile under `%APPDATA%/fallout-os`.
+Existing browser data stays in the original browser and is not automatically
+copied. Storage keys and file formats remain unchanged. File Explorer is still
+the virtual vault filesystem. Local music import uses the existing file picker
+and must be reselected after restart; audio is never uploaded.
+
+Renderer Node integration is disabled; context isolation, sandboxing and web
+security are enabled. The custom robco://app origin serves only root web assets.
+Permissions and unsolicited popup windows are denied. CSP allows existing inline
+handlers, but not eval. Do not disable web security to bypass site restrictions.
+Keep Electron updated for Chromium security fixes.
+
+Run `npm test` for the web regression suite (Microsoft Edge required).
+Run `npm run test:desktop` for the Electron integration smoke test.

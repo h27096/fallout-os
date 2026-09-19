@@ -1,0 +1,32 @@
+{
+  "name": "fallout-os",
+  "version": "0.8.0",
+  "private": true,
+  "description": "Fallout OS desktop and web workspace",
+  "author": "Fallout OS contributors",
+  "main": "electron/main.cjs",
+  "scripts": {
+    "start": "electron .",
+    "desktop": "electron .",
+    "web": "node tools/serve.cjs",
+    "test": "node --test --test-concurrency=1 *.test.cjs",
+    "test:desktop": "node tools/desktop-smoke.cjs",
+    "pack:win": "electron-builder --win --dir --publish never",
+    "build:win": "electron-builder --win nsis portable --publish never"
+  },
+  "devDependencies": {
+    "electron": "44.4.3",
+    "electron-builder": "26.15.3",
+    "playwright": "1.63.0"
+  },
+  "build": {
+    "appId": "com.robco.falloutos",
+    "productName": "Fallout OS",
+    "directories": { "output": "dist" },
+    "files": ["*.html", "*.css", "*.js", "electron/**", "package.json"],
+    "asar": true,
+    "win": { "target": ["nsis", "portable"], "signAndEditExecutable": false },
+    "nsis": { "oneClick": false, "perMachine": false, "allowToChangeInstallationDirectory": true },
+    "portable": { "artifactName": "${productName}-${version}-portable.${ext}" }
+  }
+}
