@@ -27,7 +27,7 @@ const fs = require('node:fs'), http = require('node:http'), assert = require('no
         await input.press('Enter'); assert.equal(await result.innerText(),'1');
         await page.locator('#desktopIcons').getByText('HOLOTAPES',{exact:true}).click(); await launch(); assert.equal(await input.inputValue(),'sin(pi/2)');
         await input.press('Escape'); assert.equal(await page.locator('#calculatorWindow').isVisible(),false);
-        assert.equal(await page.locator('#desktopIcons button').last().evaluate(el=>el===document.activeElement),true);
+        assert.equal(await page.locator('#desktopIcons').getByText('CALCULATOR', { exact: true }).evaluate(el=>el===document.activeElement),true);
         await page.reload(); await page.evaluate(()=>calculator.open());
         assert.equal(await page.locator('#calcHistory li').count(),3); assert.equal(await page.locator('#calcAngle').inputValue(),'rad');
         assert.equal(await page.locator('#calcScientific').isVisible(),true);

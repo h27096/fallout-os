@@ -6,7 +6,11 @@ const os = require('node:os');
 const path = require('node:path');
 (async () => {
   const profile = fs.mkdtempSync(path.join(os.tmpdir(), 'robco-smoke-'));
-  const app = await _electron.launch({ args: [path.join(__dirname, '..'), '--user-data-dir=' + profile] });
+  const packaged = process.argv.includes('--packaged');
+  const app = await _electron.launch({
+    ...(packaged ? { executablePath: path.join(__dirname, '../dist/win-unpacked/Fallout OS.exe') } : {}),
+    args: [...(packaged ? [] : [path.join(__dirname, '..')]), '--user-data-dir=' + profile]
+  });
   try {
     const page = await app.firstWindow();
     const errors = [];

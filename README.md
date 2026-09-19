@@ -146,3 +146,8 @@ Tasks. This desktop branch adds it to both web and desktop: create/edit, complet
 delete, due dates, priorities, and All/Active/Completed filters. Open TASKS from the
 dock or terminal. Data uses `robco.tasks.v1`; damaged, stale or failed storage
 writes are preserved. Closing the panel retains the form until reload.
+
+Desktop verification also supports `node tools/desktop-smoke.cjs --packaged`
+after `npm run pack:win` or `npm run build:win`. Tests use temporary profiles and
+never touch your normal app data. The desktop smoke covers Tasks creation,
+editing, completion/filtering, persistence and damaged-data protection too.
