@@ -127,3 +127,14 @@ Keep Electron updated for Chromium security fixes.
 
 Run `npm test` for the web regression suite (Microsoft Edge required).
 Run `npm run test:desktop` for the Electron integration smoke test.
+
+### Desktop browser compatibility
+
+VaultNet retains its address bar, entered-address history, reload, home and
+embedded pages. Sites that forbid framing still refuse to embed. In the desktop,
+OPEN IN DEFAULT BROWSER opens the selected HTTP(S) address in Windows' default
+browser; the web version retains OPEN IN NEW TAB. In-frame link history remains
+owned by the remote site, as before. Popups and special protocols are denied;
+use the explicit fallback for sites requiring a separate window or login.
+The narrow preload exposes only this HTTP(S) action and checks the main-frame
+sender in the main process. No filesystem or raw IPC API is exposed.

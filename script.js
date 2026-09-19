@@ -425,6 +425,17 @@ function showHelp(output){
 
 
 const browserHistory = ["vaultnet://home"];
+const externalActionLabel = window.robcoDesktop ? 'OPEN IN DEFAULT BROWSER' : 'OPEN IN NEW TAB';
+if (window.robcoDesktop) {
+    const link = document.getElementById('openExternal');
+    link.textContent = externalActionLabel;
+    link.addEventListener('click', async event => {
+        event.preventDefault();
+        if (!link.hasAttribute('href')) return;
+        try { await window.robcoDesktop.openExternal(link.href); }
+        catch { document.getElementById('browserStatus').textContent = 'Unable to open the default browser.'; }
+    });
+}
 let browserHistoryIndex = 0;
 let browserTimer;
 
@@ -491,15 +502,15 @@ function renderBrowser() {
         if (!frame.isConnected) return;
         clearTimeout(browserTimer);
         // Blocked frames can fire load too; never report a guaranteed success.
-        status.textContent = "ADDRESS REQUESTED. If the page is blank or refused, use OPEN IN NEW TAB.";
+        status.textContent = "ADDRESS REQUESTED. If the page is blank or refused, use " + externalActionLabel + ".";
     });
     frame.addEventListener("error", function() {
         if (!frame.isConnected) return;
         clearTimeout(browserTimer);
-        status.textContent = "PAGE UNAVAILABLE HERE. Try OPEN IN NEW TAB.";
+        status.textContent = "PAGE UNAVAILABLE HERE. Try " + externalActionLabel + ".";
     });
     browserTimer = setTimeout(function() {
-        status.textContent = "STILL WAITING? The site may be slow or block embedding. Try OPEN IN NEW TAB.";
+        status.textContent = "STILL WAITING? The site may be slow or block embedding. Try " + externalActionLabel + ".";
     }, 10000);
     frame.src = address;
 }

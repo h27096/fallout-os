@@ -1,5 +1,5 @@
 'use strict';
-const { app, BrowserWindow, protocol, net, session, dialog } = require('electron');
+const { app, BrowserWindow, protocol, net, session, dialog, ipcMain, shell } = require('electron');
 const path = require('node:path');
 const fs = require('node:fs');
 const { pathToFileURL } = require('node:url');
@@ -8,6 +8,13 @@ const entry = 'robco://app/index.html';
 protocol.registerSchemesAsPrivileged([{ scheme: 'robco', privileges: { standard: true, secure: true, supportFetchAPI: true } }]);
 app.enableSandbox();
 let mainWindow;
+ipcMain.handle('open-external', async (event, value) => {
+  if (!mainWindow || event.sender !== mainWindow.webContents || event.senderFrame !== mainWindow.webContents.mainFrame || event.senderFrame.url !== entry) throw new Error('Untrusted sender');
+  if (typeof value !== 'string' || value.length > 8192) throw new Error('Invalid address');
+  const url = new URL(value);
+  if (!['http:', 'https:'].includes(url.protocol) || url.username || url.password) throw new Error('Unsupported address');
+  await shell.openExternal(url.href);
+});
 app.whenReady().then(async () => {
   // Only renderer assets are reachable. Never expose source, dependencies or arbitrary paths.
   const assets = new Set(fs.readdirSync(root).filter(name => /\.(html|css|js)$/.test(name)));
@@ -26,7 +33,7 @@ app.whenReady().then(async () => {
   });
   function createWindow() {
     mainWindow = new BrowserWindow({ width: 1280, height: 800, minWidth: 600, minHeight: 400, backgroundColor: '#001000', autoHideMenuBar: true,
-      webPreferences: { nodeIntegration: false, contextIsolation: true, sandbox: true, webSecurity: true, webviewTag: false } });
+      webPreferences: { preload: path.join(__dirname, 'preload.cjs'), nodeIntegration: false, contextIsolation: true, sandbox: true, webSecurity: true, webviewTag: false } });
     const wc = mainWindow.webContents;
     wc.setWindowOpenHandler(() => ({ action: 'deny' }));
     wc.on('will-navigate', event => event.preventDefault());
