@@ -11,6 +11,7 @@
     "web": "node tools/serve.cjs",
     "test": "node --test --test-concurrency=1 *.test.cjs",
     "test:desktop": "node tools/desktop-smoke.cjs",
+    "test:browser": "node tools/vaultnet-smoke.cjs",
     "pack:win": "electron-builder --win --dir --publish never",
     "build:win": "electron-builder --win nsis portable --publish never"
   },

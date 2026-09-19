@@ -449,6 +449,7 @@ function openBrowser() {
     document.getElementById("browserAddress").focus();
 }
 function closeBrowser() {
+    if (window.VaultNetDesktop) window.VaultNetDesktop.command('close');
     RobcoWindows.close(document.getElementById("browserWindow"));
 }
 function browserNavigate(value) {
@@ -459,7 +460,8 @@ function browserNavigate(value) {
         if (!address || /\s/.test(address)) throw new Error("Invalid address");
         const url = new URL(/^[a-z][a-z0-9+.-]*:/i.test(address) ? address : "https://" + address);
         if (!["http:", "https:"].includes(url.protocol) || !url.hostname || url.username || url.password) throw new Error("Unsupported address");
-        addBrowserHistory(url.href);
+        if (window.VaultNetDesktop) window.VaultNetDesktop.command('navigate', url.href);
+        else addBrowserHistory(url.href);
     } catch {
         document.getElementById("browserStatus").textContent = "INVALID ADDRESS. Enter an HTTP or HTTPS website address.";
     }
@@ -473,14 +475,17 @@ function addBrowserHistory(address) {
     renderBrowser();
 }
 function browserBack() {
+    if (window.VaultNetDesktop) return window.VaultNetDesktop.command('back');
     if (browserHistoryIndex > 0) { browserHistoryIndex--; renderBrowser(); }
 }
 function browserForward() {
+    if (window.VaultNetDesktop) return window.VaultNetDesktop.command('forward');
     if (browserHistoryIndex < browserHistory.length - 1) { browserHistoryIndex++; renderBrowser(); }
 }
-function browserHome() { addBrowserHistory("vaultnet://home"); }
-function browserReload() { renderBrowser(); }
+function browserHome() { if (window.VaultNetDesktop) return window.VaultNetDesktop.command('home'); addBrowserHistory("vaultnet://home"); }
+function browserReload() { if (window.VaultNetDesktop) return window.VaultNetDesktop.command('reload'); renderBrowser(); }
 function renderBrowser() {
+    if (window.VaultNetDesktop) return window.VaultNetDesktop.command('state');
     clearTimeout(browserTimer);
     const address = browserHistory[browserHistoryIndex];
     const home = address === "vaultnet://home";

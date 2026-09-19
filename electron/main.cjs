@@ -3,6 +3,7 @@ const { app, BrowserWindow, protocol, net, session, dialog, ipcMain, shell } = r
 const path = require('node:path');
 const fs = require('node:fs');
 const { pathToFileURL } = require('node:url');
+const { installVaultNet } = require('./vaultnet.cjs');
 const root = path.join(__dirname, '..');
 const entry = 'robco://app/index.html';
 protocol.registerSchemesAsPrivileged([{ scheme: 'robco', privileges: { standard: true, secure: true, supportFetchAPI: true } }]);
@@ -35,6 +36,7 @@ app.whenReady().then(async () => {
     mainWindow = new BrowserWindow({ width: 1280, height: 800, minWidth: 600, minHeight: 400, backgroundColor: '#001000', autoHideMenuBar: true,
       webPreferences: { preload: path.join(__dirname, 'preload.cjs'), nodeIntegration: false, contextIsolation: true, sandbox: true, webSecurity: true, webviewTag: false } });
     const wc = mainWindow.webContents;
+    installVaultNet(mainWindow, entry);
     wc.setWindowOpenHandler(() => ({ action: 'deny' }));
     wc.on('will-navigate', event => event.preventDefault());
     wc.on('will-attach-webview', event => event.preventDefault());

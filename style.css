@@ -118,6 +118,27 @@ input:disabled {
 #browserStatus { padding: 0 12px; margin: 0 0 12px; overflow-wrap: anywhere; }
 #browserViewport { flex: 1; min-height: 150px; position: relative; border-block: 1px solid #33ff33; }
 #browserFrame { width: 100%; height: 100%; position: absolute; inset: 0; border: 0; background: white; }
+#browserWindow.nativeBrowser { overflow: hidden; }
+.nativeBrowser #browserViewport { min-height: 0; overflow: hidden; }
+.nativeBrowser #browserStatus { max-height: 3em; overflow: auto; flex-shrink: 0; }
+.nativeBrowser #browserFallback { flex-shrink: 0; }
+@media (max-height: 650px) {
+    #browserWindow.nativeBrowser #browserTitleBar { padding: 6px 10px; }
+    .nativeBrowser #browserTitleBar small, .nativeBrowser #browserFallback span { display: none; }
+    .nativeBrowser #browserControls { padding: 6px 10px 0; }
+    .nativeBrowser button, .nativeBrowser input { padding: 4px 6px; }
+    .nativeBrowser #addressForm { margin: 0; padding: 6px 10px; }
+    .nativeBrowser #browserStatus { margin-bottom: 4px; max-height: 1.2em; font-size: 12px; }
+    .nativeBrowser #browserFallback { padding: 4px 10px; }
+    .nativeBrowser #openExternal { margin-top: 0; padding: 2px 4px; }
+}
+@media (max-height: 450px) {
+    #browserWindow.nativeBrowser #browserTitleBar { padding: 2px 8px; }
+    .nativeBrowser #browserControls { padding: 3px 8px 0; }
+    .nativeBrowser #addressForm { padding: 3px 8px; }
+    .nativeBrowser #browserFallback { padding: 2px 8px; }
+    .nativeBrowser #openExternal { padding: 0 4px; }
+}
 #browserHome { padding: 24px; height: 100%; box-sizing: border-box; overflow: auto; line-height: 1.6; }
 #browserFallback { padding: 12px; font-size: 13px; line-height: 1.5; }
 #openExternal { color: #33ff33; display: inline-block; margin-top: 8px; padding: 6px; border: 1px solid; }

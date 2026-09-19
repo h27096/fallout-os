@@ -130,14 +130,48 @@ Run `npm run test:desktop` for the Electron integration smoke test.
 
 ### Desktop browser compatibility
 
-VaultNet retains its address bar, entered-address history, reload, home and
-embedded pages. Sites that forbid framing still refuse to embed. In the desktop,
-OPEN IN DEFAULT BROWSER opens the selected HTTP(S) address in Windows' default
-browser; the web version retains OPEN IN NEW TAB. In-frame link history remains
-owned by the remote site, as before. Popups and special protocols are denied;
-use the explicit fallback for sites requiring a separate window or login.
-The narrow preload exposes only this HTTP(S) action and checks the main-frame
-sender in the main process. No filesystem or raw IPC API is exposed.
+VaultNet Browser v2 uses an Electron 44 `WebContentsView`, owned by the main
+process. Desktop pages, including YouTube, load as top-level remote webContents,
+not iframes. RobCo's address bar, Go, Back, Forward, Reload, Home and Close remain
+in the trusted app. HTTP(S) links, redirects and same-document history update
+the controls. Ctrl+L returns from a remote page to the address bar. New-window
+and target=_blank HTTP(S) links open in the current view; no independent popup
+window receives app privileges. Home is a blank native history entry displaying
+the local VaultNet welcome screen; Back can return to the previous page.
+
+Remote pages have no preload, Node or Fallout OS APIs. They use a separate
+`persist:vaultnet-v2` session, with context isolation, sandboxing and web security
+enabled. That session cannot load app assets or local files. Permissions are
+denied, including location, camera and microphone. IPC accepts only the exact
+trusted app's main frame and exposes fixed navigation/layout operations, never
+raw IPC or filesystem access. URL protocols, credentials and view bounds are
+validated in the main process. Certificate errors and site security remain intact.
+
+Switching apps hides and mutes the native view; returning restores it. Resizing
+and minimizing synchronize its visibility and bounds. Close destroys remote
+content and browsing history, while website cookies remain in the separate
+profile partition. Reloading the app or exiting also disposes of the view.
+Other apps and their stored data are unchanged.
+
+Mail and telephone links require confirmation before opening an external app;
+other non-web protocols are blocked. Downloads are canceled with a message to
+use OPEN IN DEFAULT BROWSER. That button opens the current HTTP(S) address in
+Windows' default browser. Sites requiring popup-based login, protected DRM,
+unsupported codecs, special permissions or a supported browser may still need
+that fallback. Authentication, DRM and certificate/security checks are never
+bypassed. A successful YouTube page load does not guarantee every video or login
+flow works in Electron.
+
+The hosted web version retains its existing sandboxed iframe, entered-address
+history and OPEN IN NEW TAB fallback. Desktop-only code activates only when the
+narrow preload browser API is present; web hosting instructions are unchanged.
+
+Run `npm run test:browser` for native navigation, anti-iframe, isolation and
+window-lifecycle checks. `node tools/vaultnet-smoke.cjs --youtube` additionally
+checks a live YouTube page (network access required). Add `--packaged` to test
+the unpacked Windows build. Tests use temporary profiles, not normal app data.
+Architecture references: [WebContentsView](https://www.electronjs.org/docs/latest/api/web-contents-view)
+and [Electron security](https://www.electronjs.org/docs/latest/tutorial/security).
 
 ### Tasks
 
