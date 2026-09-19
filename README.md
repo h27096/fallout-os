@@ -212,3 +212,13 @@ To verify a delivered ZIP, extract it to a fresh folder, run
 and run `node tools/desktop-smoke.cjs --packaged` and
 `node tools/vaultnet-smoke.cjs --packaged`. Both use temporary profiles. Remove the
 override afterward with `Remove-Item Env:FALLOUT_TEST_EXE`.
+
+## RobCo Clock & Calendar
+
+Open CALENDAR on the desktop, or type CALENDAR / EVENTS in the terminal. TIME and DATE print local time/date. Select a day to browse its events; use the editor to save a title, local date/time and optional notes. EDIT and DELETE are available in the selected-day list and upcoming agenda. Closing the window keeps its draft; NEW / CANCEL EDIT clears it.
+
+Events use the dedicated `robco.calendar.v1` localStorage key. Invalid saved data and conflicting writes are preserved rather than overwritten. All prior storage keys, Electron origin/profile, sandbox and Windows packaging settings remain unchanged.
+
+Reminders are checked once per second while the renderer is running, including when the calendar window is closed. A due reminder raises the calendar with a persistent, dismissible in-app alert; VaultNet's native view is hidden by the existing stacking adapter. Native notifications are optional and permission-dependent (the current Electron permissions deny them, so in-app alerts remain the reliable fallback). No background service is installed: events that became due while Fallout OS was closed appear on their calendar date but do not generate retrospective alarms. Sleep or suspended execution can delay reminders until execution resumes. Dates are interpreted in the current local timezone; nonexistent daylight-saving times are rejected, and ambiguous fall-back times use JavaScript's first occurrence.
+
+Validation: `node calendar.test.cjs`, `npm test`, `npm run test:desktop`, and `npm run test:browser`. Tests use isolated browser/Electron profiles.

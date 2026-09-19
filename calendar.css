@@ -1,0 +1,13 @@
+.calendarBody { padding: 16px; }
+.calendarClock time { font-size: clamp(28px, 5vw, 48px); font-variant-numeric: tabular-nums; }
+.calendarColumns { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+#calendarGrid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 5px; text-align: center; }
+#calendarGrid button { padding: 12px 2px; }
+#calendarGrid [aria-current="date"] { border: 3px double #caffca; text-decoration: underline; font-weight: bold; }
+#calendarGrid [aria-pressed="true"] { background: #205620; }
+#calendarForm { display: grid; gap: 12px; }
+#calendarNotes { min-height: 90px; }
+#calendarMonth { font-size: 18px; }
+#calendarWindow li p { white-space: pre-wrap; overflow-wrap: anywhere; }
+#calendarAlerts > div { border: 2px solid #caffca; padding: 12px; margin-block: 12px; }
+@media(max-width: 760px) { .calendarColumns { grid-template-columns: 1fr; } }

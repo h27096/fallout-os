@@ -59,6 +59,12 @@ const { setTimeout: delay } = require('node:timers/promises');
     await until(async () => (await snapshot()).visible, 'native view visible');
     assert.deepEqual(await remote('({topLevel: window === top, node: typeof require, bridge: typeof robcoDesktop, process: typeof process, text: document.querySelector("h1").textContent})'),
       { topLevel: true, node: 'undefined', bridge: 'undefined', process: 'undefined', text: 'VaultNet fixture /first' });
+    await page.evaluate(() => calendar.open());
+    await until(async () => !(await snapshot()).visible, 'calendar hides native view');
+    await page.locator('#calendarClose').click();
+    await page.evaluate(() => openBrowser());
+    await until(async () => (await snapshot()).visible, 'browser restored after calendar');
+    await page.locator('#browserAddress').blur();
     const prefs = (await snapshot()).prefs;
     for (const key of ['sandbox', 'contextIsolation', 'webSecurity']) assert.equal(prefs[key], true, key);
     for (const key of ['nodeIntegration', 'nodeIntegrationInSubFrames', 'nodeIntegrationInWorker', 'webviewTag', 'allowRunningInsecureContent']) assert.equal(prefs[key], false, key);

@@ -154,6 +154,12 @@ else if(recordTerminal(command) || fileTerminal(command)){
 else if(command === "CALCULATOR" || command === "CALC"){
     calculator.open();
 }
+else if(command === "TIME" || command === "DATE"){
+    output.innerHTML += '<br><br>' + escapeTerminalText(command === 'TIME' ? new Date().toLocaleTimeString() : new Date().toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }));
+}
+else if(command === "CALENDAR" || command === "EVENTS"){
+    calendar.open();
+}
 else if(command === "TASKS"){
     tasks.open();
 }
@@ -385,7 +391,7 @@ if(personalLogs.length > 0){
 }
 
 function showHelp(output){
-    output.innerHTML += '<br><br>PERSONAL APPS: HOLOTAPES | RADIO (or MUSIC) | CALCULATOR (or CALC) | TASKS<br>';
+    output.innerHTML += '<br><br>PERSONAL APPS: HOLOTAPES | RADIO (or MUSIC) | CALCULATOR (or CALC) | TASKS | TIME | DATE | CALENDAR | EVENTS<br>';
 
     if(overseerMode){
 
