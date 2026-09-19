@@ -8,7 +8,7 @@ const path = require('node:path');
   const profile = fs.mkdtempSync(path.join(os.tmpdir(), 'robco-smoke-'));
   const packaged = process.argv.includes('--packaged');
   const app = await _electron.launch({
-    ...(packaged ? { executablePath: path.join(__dirname, '../dist/win-unpacked/Fallout OS.exe') } : {}),
+    ...(packaged ? { executablePath: process.env.FALLOUT_TEST_EXE || path.join(__dirname, '../dist/win-unpacked/Fallout OS.exe') } : {}),
     args: [...(packaged ? [] : [path.join(__dirname, '..')]), '--user-data-dir=' + profile]
   });
   try {

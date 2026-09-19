@@ -107,11 +107,31 @@ npm start
 For the website, run `npm run web` and open http://127.0.0.1:8080, or keep
 hosting the root static assets as before. No web build step is required.
 
-On Windows, create an unpacked app with `npm run pack:win`, or create both
-an installer and portable executable with `npm run build:win`. Outputs go to
-`dist/`. These commands never publish. Signing credentials are not required;
-the resulting executables are unsigned and Windows may show an unknown-publisher
-warning. Portable means no installation, not portable user data.
+On Windows, run `npm ci`, then `npm run build:win` to create an x64 NSIS installer
+and a complete no-install ZIP in `dist/`. Use `Fallout OS-0.8.1-Setup-x64.exe`
+for normal installation and a desktop shortcut. Alternatively, extract **all** of
+`Fallout OS-0.8.1-windows-x64.zip` into a permanent folder and launch `Fallout OS.exe`
+there. Create a shortcut to that EXE; never move or copy the EXE by itself.
+No Node.js installation is needed to run either packaged distribution.
+
+`npm run pack:win` creates only the complete unpacked directory for development.
+Both build commands remove this checkout's generated `dist/` first, never user
+profiles or other builds. The after-pack check rejects missing/empty runtime
+resources and verifies the app archive includes VaultNet v2. Run `npm run verify:win`
+to repeat that check. Before delivery run both packaged smoke tests documented below.
+Distribute the installer or entire ZIP, never a link to the inner EXE alone.
+
+Electron 44.4.3 and electron-builder 26.15.3 remain pinned. These commands never
+publish. The executables are unsigned and Windows may show an unknown-publisher
+warning. No-install refers to installation, not portable user data.
+
+If startup reports `Invalid file descriptor to ICU data received`, check that
+`icudtl.dat`, the `.pak` files, `locales/`, DLLs and `resources/app.asar` are beside
+the executable in the extracted/installed layout. Re-extract the complete ZIP
+to a fresh folder instead of copying files from a different Electron version.
+Do not delete your profile or older working build. A copied inner EXE is not
+self-contained; see [Electron distribution](https://www.electronjs.org/docs/latest/tutorial/distribution-overview)
+and [Windows build targets](https://www.electron.build/v26/docs/api/app-builder-lib.interface.windowsconfiguration/).
 
 The desktop stores data in its own Electron profile under `%APPDATA%/fallout-os`.
 Existing browser data stays in the original browser and is not automatically
@@ -185,3 +205,10 @@ Desktop verification also supports `node tools/desktop-smoke.cjs --packaged`
 after `npm run pack:win` or `npm run build:win`. Tests use temporary profiles and
 never touch your normal app data. The desktop smoke covers Tasks creation,
 editing, completion/filtering, persistence and damaged-data protection too.
+
+To verify a delivered ZIP, extract it to a fresh folder, run
+`node tools/verify-runtime.cjs "C:\path\to\extracted-folder"`, then set
+`$env:FALLOUT_TEST_EXE = "C:\path\to\extracted-folder\Fallout OS.exe"` in PowerShell
+and run `node tools/desktop-smoke.cjs --packaged` and
+`node tools/vaultnet-smoke.cjs --packaged`. Both use temporary profiles. Remove the
+override afterward with `Remove-Item Env:FALLOUT_TEST_EXE`.

@@ -1,6 +1,6 @@
 {
   "name": "fallout-os",
-  "version": "0.8.0",
+  "version": "0.8.1",
   "private": true,
   "description": "Fallout OS desktop and web workspace",
   "author": "Fallout OS contributors",
@@ -12,8 +12,9 @@
     "test": "node --test --test-concurrency=1 *.test.cjs",
     "test:desktop": "node tools/desktop-smoke.cjs",
     "test:browser": "node tools/vaultnet-smoke.cjs",
-    "pack:win": "electron-builder --win --dir --publish never",
-    "build:win": "electron-builder --win nsis portable --publish never"
+    "pack:win": "node tools/build-windows.cjs --dir",
+    "build:win": "node tools/build-windows.cjs",
+    "verify:win": "node tools/verify-runtime.cjs"
   },
   "devDependencies": {
     "electron": "44.4.3",
@@ -23,11 +24,33 @@
   "build": {
     "appId": "com.robco.falloutos",
     "productName": "Fallout OS",
-    "directories": { "output": "dist" },
-    "files": ["*.html", "*.css", "*.js", "electron/**", "package.json"],
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "*.html",
+      "*.css",
+      "*.js",
+      "electron/**",
+      "package.json"
+    ],
     "asar": true,
-    "win": { "target": ["nsis", "portable"], "signAndEditExecutable": false },
-    "nsis": { "oneClick": false, "perMachine": false, "allowToChangeInstallationDirectory": true },
-    "portable": { "artifactName": "${productName}-${version}-portable.${ext}" }
+    "win": {
+      "target": [
+        "nsis",
+        "zip"
+      ],
+      "signAndEditExecutable": false
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "artifactName": "${productName}-${version}-Setup-${arch}.${ext}",
+      "createDesktopShortcut": true,
+      "deleteAppDataOnUninstall": false
+    },
+    "afterPack": "./tools/verify-runtime.cjs",
+    "artifactName": "${productName}-${version}-windows-${arch}.${ext}"
   }
 }

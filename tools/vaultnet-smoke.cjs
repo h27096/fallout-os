@@ -27,7 +27,7 @@ const { setTimeout: delay } = require('node:timers/promises');
   let app;
   try {
     app = await _electron.launch({
-      ...(packaged ? { executablePath: path.join(__dirname, '../dist/win-unpacked/Fallout OS.exe') } : {}),
+      ...(packaged ? { executablePath: process.env.FALLOUT_TEST_EXE || path.join(__dirname, '../dist/win-unpacked/Fallout OS.exe') } : {}),
       args: [...(packaged ? [] : [path.join(__dirname, '..')]), '--user-data-dir=' + profile]
     });
     const page = await app.firstWindow();
