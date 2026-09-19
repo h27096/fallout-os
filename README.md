@@ -138,3 +138,11 @@ owned by the remote site, as before. Popups and special protocols are denied;
 use the explicit fallback for sites requiring a separate window or login.
 The narrow preload exposes only this HTTP(S) action and checks the main-frame
 sender in the main process. No filesystem or raw IPC API is exposed.
+
+### Tasks
+
+The inspected upstream main (`40560b1`) and its only other branch did not contain
+Tasks. This desktop branch adds it to both web and desktop: create/edit, complete,
+delete, due dates, priorities, and All/Active/Completed filters. Open TASKS from the
+dock or terminal. Data uses `robco.tasks.v1`; damaged, stale or failed storage
+writes are preserved. Closing the panel retains the form until reload.

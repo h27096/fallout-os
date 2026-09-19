@@ -154,6 +154,9 @@ else if(recordTerminal(command) || fileTerminal(command)){
 else if(command === "CALCULATOR" || command === "CALC"){
     calculator.open();
 }
+else if(command === "TASKS"){
+    tasks.open();
+}
 
 else if(command == "HELP"){
 
@@ -382,7 +385,7 @@ if(personalLogs.length > 0){
 }
 
 function showHelp(output){
-    output.innerHTML += '<br><br>PERSONAL APPS: HOLOTAPES | RADIO (or MUSIC) | CALCULATOR (or CALC)<br>';
+    output.innerHTML += '<br><br>PERSONAL APPS: HOLOTAPES | RADIO (or MUSIC) | CALCULATOR (or CALC) | TASKS<br>';
 
     if(overseerMode){
 
