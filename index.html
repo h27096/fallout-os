@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="calculator.css">
     <link rel="stylesheet" href="calendar.css">
     <link rel="stylesheet" href="settings.css">
+    <link rel="stylesheet" href="search.css">
 </head>
 <body>
 
@@ -23,7 +24,7 @@
 </div>
 
 <div id="desktopScreen" style="display:none;">
-    <div id="topBar"><span>ROBCO INDUSTRIES</span><time id="desktopClock" aria-label="Local time, 24-hour format"></time></div>
+    <div id="topBar"><span>ROBCO INDUSTRIES</span><button id="searchLauncher" onclick="RobcoSearch.open()" aria-keyshortcuts="Control+Space" title="System Search (Ctrl+Space)">SEARCH</button><time id="desktopClock" aria-label="Local time, 24-hour format"></time></div>
 
     <nav id="desktopIcons" aria-label="Desktop apps">
         <button onclick="openTerminal()">TERMINAL</button>
@@ -148,5 +149,6 @@
 <script src="calendar.js"></script>
 <script src="settings.js"></script>
 <script src="vaultnet-desktop.js"></script>
+<script src="search.js"></script>
 </body>
 </html>

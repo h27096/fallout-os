@@ -240,3 +240,13 @@ through the shared time-format.js formatter. All use PC local time, including mi
 as 00:00. Event entry and editing accept HH:mm (00:00–23:59), independent of the OS
 12-hour input preference. Events, agenda and reminders retain their existing HH:mm
 values. No saved events, timestamps, notification scheduling or time zones are migrated.
+
+## RobCo System Search
+
+Press Ctrl+Space anywhere in Fallout OS (including a native VaultNet page), or click SEARCH in the desktop top bar. Type an app name, file name/path, or holotape title. Use Up/Down to select, Enter to open, and Escape to return to your previous focus. Tab stays within the overlay. An empty query lists installed apps; search shows at most 100 matches and asks you to narrow larger result sets.
+
+The index contains only built-in apps and the existing Fallout OS virtual filesystem, including saved holotapes. It does not scan PC disks, remote websites, unsaved drafts, or audio files that require reattachment. Clearance-protected names are excluded until Overseer access is granted; activation checks access again. The metadata index refreshes each time search opens. Existing editors retain their unsaved-change prompts. Search adds no storage keys or migrations.
+
+Electron suppresses the native VaultNet view while search is open, even if layout updates arrive. Escape restores native focus when opened from a web page; launching another app respects normal stacking. In a regular browser the same overlay works with a modal dialog; when a cross-origin iframe owns keyboard focus, use the clickable SEARCH launcher.
+
+Verification: npm run test:search (Electron and Edge, isolated profiles); node tools/search-smoke.cjs --packaged tests the Windows package.

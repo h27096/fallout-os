@@ -19,7 +19,7 @@ function installVaultNet(win, entry) {
     const protocol = new URL(details.url).protocol;
     callback({ cancel: !['http:', 'https:', 'ws:', 'wss:', 'data:', 'blob:', 'about:'].includes(protocol) });
   });
-  let view = null, layout = null, home = true, currentURL = HOME, message = '', promptOpen = false;
+  let view = null, layout = null, home = true, currentURL = HOME, message = '', promptOpen = false, searchOpen = false;
   const trusted = event => !win.isDestroyed() && event.sender === win.webContents &&
     event.senderFrame === win.webContents.mainFrame && event.senderFrame.url === entry;
   function state() {
@@ -38,7 +38,7 @@ function installVaultNet(win, entry) {
     const y = Math.max(0, Math.ceil((layout?.y || 0) * scale));
     const w = Math.max(0, Math.min(width - x, Math.floor((layout?.width || 0) * scale)));
     const h = Math.max(0, Math.min(height - y, Math.floor((layout?.height || 0) * scale)));
-    const visible = !!layout?.visible && !home && !win.isMinimized() && win.isVisible() && w > 0 && h > 0;
+    const visible = !searchOpen && !!layout?.visible && !home && !win.isMinimized() && win.isVisible() && w > 0 && h > 0;
     view.setVisible(visible);
     view.webContents.setAudioMuted(!visible);
     if (visible) view.setBounds({ x, y, width: w, height: h });
@@ -103,6 +103,13 @@ function installVaultNet(win, entry) {
     });
     wc.on('render-process-gone', () => { if (active()) { message = 'Page stopped unexpectedly. Press Reload or Home.'; emit(); } });
     wc.on('before-input-event', (event, input) => {
+      if (input.type === 'keyDown' && input.control && !input.alt && !input.meta && !input.shift && (input.code === 'Space' || input.key === ' ')) {
+        event.preventDefault();
+        if (!input.isAutoRepeat) {
+          searchOpen = true; position(); win.webContents.focus(); win.webContents.send('system-search:open');
+        }
+        return;
+      }
       // Keep Escape available to web applications; Ctrl+L returns to trusted chrome.
       if (input.type === 'keyDown' && (input.control || input.meta) && input.key.toLowerCase() === 'l') {
         event.preventDefault(); win.webContents.focus(); win.webContents.send('vaultnet:address');
@@ -131,6 +138,11 @@ function installVaultNet(win, entry) {
       if (action === 'forward' && history?.canGoForward()) history.goForward();
     } else if (action === 'reload') { message = ''; view?.webContents.reload(); }
     else if (action === 'close') { dispose(); emit(); }
+    else if (action === 'search-overlay') {
+      if (typeof value !== 'boolean') throw new Error('Invalid overlay state');
+      searchOpen = value; position();
+    }
+    else if (action === 'focus') { if (!searchOpen && layout?.visible && !home) view?.webContents.focus(); }
     else if (action === 'state') return state();
     else if (action === 'layout') {
       if (!value || typeof value.visible !== 'boolean' || !['x', 'y', 'width', 'height'].every(key =>
@@ -141,7 +153,7 @@ function installVaultNet(win, entry) {
   });
   for (const event of ['minimize', 'restore', 'show', 'hide']) win.on(event, position);
   win.on('resize', () => { if (view) view.setVisible(false); });
-  win.webContents.on('did-start-navigation', (_event, _url, _inPlace, mainFrame) => { if (mainFrame) dispose(); });
+  win.webContents.on('did-start-navigation', (_event, _url, _inPlace, mainFrame) => { if (mainFrame) { searchOpen = false; dispose(); } });
   win.on('closed', () => {
     if (view && !view.webContents.isDestroyed()) view.webContents.close({ waitForBeforeUnload: false });
     view = null;

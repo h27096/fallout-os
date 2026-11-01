@@ -15,7 +15,8 @@
     "pack:win": "node tools/build-windows.cjs --dir",
     "build:win": "node tools/build-windows.cjs",
     "verify:win": "node tools/verify-runtime.cjs",
-    "test:settings": "node tools/settings-smoke.cjs"
+    "test:settings": "node tools/settings-smoke.cjs",
+    "test:search": "node tools/search-smoke.cjs"
   },
   "devDependencies": {
     "electron": "44.4.3",

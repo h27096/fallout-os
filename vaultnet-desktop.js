@@ -27,7 +27,7 @@
         const y = Math.max(0, rect.top + viewport.clientTop);
         const right = Math.min(innerWidth, rect.right - viewport.clientLeft, panelRect.right);
         const bottom = Math.min(innerHeight, rect.bottom - viewport.clientTop, panelRect.bottom);
-        api.layout({ visible: shown && !above && !home && !document.hidden,
+        api.layout({ visible: !document.querySelector('#systemSearch[open]') && shown && !above && !home && !document.hidden,
             x, y, width: Math.max(0, right - x), height: Math.max(0, bottom - y) }).catch(error => { status.textContent = error.message; });
     }
     function schedule() { if (!queued) { queued = true; requestAnimationFrame(layout); } }

@@ -1,0 +1,20 @@
+#systemSearch { color: #9dff9d; background: #031208; border: 2px solid #78ff78; box-shadow: 0 0 45px #000, inset 0 0 35px #143a20; width: min(680px, calc(100vw - 48px)); max-height: calc(100dvh - 64px); padding: 24px; box-sizing: border-box; font-family: "Courier New", monospace; }
+#systemSearch::backdrop { background: rgba(0, 10, 3, .78); }
+#systemSearch header { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 22px; }
+#systemSearch h2 { margin: 6px 0 0; letter-spacing: .12em; }
+#systemSearch small, #searchScope, #systemSearch footer { font-size: 12px; color: #8bb596; }
+#systemSearch label { display: block; font-size: 12px; margin-bottom: 8px; }
+#systemSearchInput { width: 100%; box-sizing: border-box; padding: 14px; font-size: 18px; }
+#searchStatus { font-size: 12px; min-height: 28px; }
+#searchResults { overflow-y: auto; max-height: min(360px, 43dvh); }
+#searchResults [role="option"] { display: grid; grid-template-columns: 90px minmax(0, 1fr); gap: 4px 12px; padding: 12px; border: 1px solid transparent; cursor: pointer; }
+#searchResults [role="option"] span { grid-column: 2; color: #8bb596; font-size: 12px; overflow-wrap: anywhere; }
+#searchResults [role="option"] strong { overflow-wrap: anywhere; }
+#searchResults [aria-selected="true"] { background: #173c21; border-color: #78ff78; }
+#searchResults [role="option"]:hover { background: #173c21; }
+#systemSearch footer { border-top: 1px solid #35643f; margin-top: 16px; padding-top: 14px; }
+#systemSearch :focus-visible { outline: 2px solid #ceffb0; outline-offset: 3px; }
+@media (max-width: 500px) { #systemSearch { padding: 14px; } #systemSearch h2 { font-size: 20px; } #searchResults [role="option"] { grid-template-columns: 70px minmax(0, 1fr); } }
+
+#topBar { align-items: center; padding-block: 8px; }
+#searchLauncher { padding: 2px 8px; margin-left: auto; font-size: 12px; }

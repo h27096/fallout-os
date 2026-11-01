@@ -5,6 +5,8 @@ const storage = { getItem: () => value, setItem: (_, next) => { if (fail) throw 
 const open = () => RobcoFilesystem.create(storage, () => overseer, () => 'live logs');
 const fs = open();
 assert.equal(fs.list('/').length, 6);
+assert.ok(fs.searchEntries().every(item => !/^\/(CLASSIFIED|PERSONNEL|LOGS)(\/|$)/.test(item.path)));
+assert.ok(fs.searchEntries().every(item => !Object.hasOwn(item, 'content')));
 for (const path of ['/CLASSIFIED', '/PERSONNEL/PERSONNEL.DAT', '/LOGS/OVERSEER.LOG']) assert.throws(() => fs.get(path), /ACCESS DENIED/);
 assert.throws(() => fs.create('/CLASSIFIED', 'X.DAT', 'file'), /ACCESS DENIED/);
 assert.throws(() => fs.write('/CLASSIFIED/CLASSIFIED.DAT', 'x'), /ACCESS DENIED/);
@@ -23,6 +25,7 @@ assert.equal(fs.get('/VAULT/RENAMED/NOTE.DAT').type, 'file');
 fs.remove('/VAULT/RENAMED/NOTE.DAT'); fs.remove('/VAULT/RENAMED');
 assert.throws(() => fs.remove('/VAULT'), /Built-in/);
 overseer = true;
+assert.ok(fs.searchEntries().some(item => item.path === '/CLASSIFIED/CLASSIFIED.DAT'));
 assert.equal(fs.get('/LOGS/OVERSEER.LOG').content, 'live logs');
 fs.write('/CLASSIFIED/CLASSIFIED.DAT', 'updated');
 assert.equal(open().get('/CLASSIFIED/CLASSIFIED.DAT').content, 'updated');

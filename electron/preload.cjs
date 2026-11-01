@@ -7,6 +7,15 @@ contextBridge.exposeInMainWorld('robcoDesktop', Object.freeze({
     choose: () => ipcRenderer.invoke('wallpaper', 'choose'),
     restore: () => ipcRenderer.invoke('wallpaper', 'restore')
   }),
+  search: Object.freeze({
+    overlay: active => ipcRenderer.invoke('vaultnet:control', 'search-overlay', active),
+    restoreBrowserFocus: () => ipcRenderer.invoke('vaultnet:control', 'focus'),
+    onOpen: callback => {
+      const listener = () => callback();
+      ipcRenderer.on('system-search:open', listener);
+      return () => ipcRenderer.removeListener('system-search:open', listener);
+    }
+  }),
   openExternal: url => ipcRenderer.invoke('open-external', url),
   browser: Object.freeze({
     navigate: url => ipcRenderer.invoke('vaultnet:control', 'navigate', url),

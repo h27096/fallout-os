@@ -86,6 +86,12 @@
                 return nodes[full] || full === '/' ? full : aliases[String(path).toUpperCase()] || full;
             },
             get,
+            // Metadata only; restricted names never leave this permission boundary.
+            searchEntries() {
+                return Object.keys(nodes).filter(path => !restricted(path) || isOverseer()).map(path => ({
+                    path, name: path.split('/').pop(), type: nodes[path].type
+                }));
+            },
             list(path) {
                 if (get(path).type !== 'folder') throw Error('NOT A FOLDER.');
                 return Object.keys(nodes).filter(p => parent(p) === path).sort((a, b) =>
