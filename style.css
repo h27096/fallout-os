@@ -63,6 +63,9 @@ input:disabled {
 }
 
 #topBar {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
     position: absolute;
     top: 0;
     left: 0;

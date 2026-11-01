@@ -155,7 +155,7 @@ else if(command === "CALCULATOR" || command === "CALC"){
     calculator.open();
 }
 else if(command === "TIME" || command === "DATE"){
-    output.innerHTML += '<br><br>' + escapeTerminalText(command === 'TIME' ? new Date().toLocaleTimeString() : new Date().toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }));
+    output.innerHTML += '<br><br>' + escapeTerminalText(command === 'TIME' ? 'CURRENT SYSTEM TIME: ' + RobcoTime.format(new Date(), true) : new Date().toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }));
 }
 else if(command === "SETTINGS"){
     settings.open();

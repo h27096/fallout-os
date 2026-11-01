@@ -16,13 +16,13 @@ const calendar = (() => {
     panel.setAttribute('aria-label', 'RobCo Clock & Calendar');
     panel.innerHTML = `<header class="fileTitle"><strong>ROBCO CLOCK & CALENDAR</strong><button id="calendarClose">CLOSE CALENDAR</button></header>
       <div class="calendarBody"><div class="calendarClock"><time id="calendarClock"></time><p id="calendarDate"></p></div>
-      <p>Local time. Reminders run while Fallout OS is open; none are scheduled while it is closed.</p>
+      <p>Local time (24-hour format). Reminders run while Fallout OS is open; none are scheduled while it is closed.</p>
       <button id="calendarNotify">ENABLE NATIVE NOTIFICATIONS</button><p id="calendarNotificationStatus" role="status">In-app reminders are enabled.</p>
       <div id="calendarAlerts" role="alert"></div>
       <div class="calendarColumns"><div><nav class="fileToolbar" aria-label="Month navigation"><button id="calendarPrev" aria-label="Previous month">◀</button><h2 id="calendarMonth"></h2><button id="calendarNext" aria-label="Next month">▶</button><button id="calendarToday">TODAY</button></nav>
       <div id="calendarGrid" aria-label="Month calendar"></div><h3 id="calendarSelected"></h3><ul id="calendarDayEvents"></ul></div>
       <div><form id="calendarForm"><h2 id="calendarEditorHeading">NEW EVENT</h2><label>TITLE<input id="calendarTitle" maxlength="200" required></label>
-      <label>DATE<input id="calendarEventDate" type="date" required min="0001-01-01" max="9999-12-31"></label><label>TIME<input id="calendarTime" type="time" required></label>
+      <label>DATE<input id="calendarEventDate" type="date" required min="0001-01-01" max="9999-12-31"></label><label>TIME (24-HOUR HH:mm)<input id="calendarTime" type="text" placeholder="14:35" pattern="([01][0-9]|2[0-3]):[0-5][0-9]" maxlength="5" title="Enter 24-hour time from 00:00 to 23:59 (HH:mm)" required></label>
       <label>NOTES (OPTIONAL)<textarea id="calendarNotes" maxlength="4000"></textarea></label><button>SAVE EVENT</button><button type="button" id="calendarNew">NEW / CANCEL EDIT</button></form>
       <p id="calendarStatus" role="status"></p><h2>UPCOMING EVENTS</h2><ul id="calendarAgenda"></ul></div></div></div>`;
     document.body.append(panel);
@@ -97,7 +97,7 @@ const calendar = (() => {
     panel.addEventListener('keydown', event => { if (event.key === 'Escape') { event.stopPropagation(); RobcoWindows.close(panel); } });
     let lastDay = '', lastMinute = '';
     function tick() {
-        const now = new Date(); get('calendarClock').textContent = now.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit', second: '2-digit' }); get('calendarClock').dateTime = now.toISOString();
+        const now = new Date(); get('desktopClock').textContent = RobcoTime.format(now); get('desktopClock').dateTime = now.toISOString(); get('calendarClock').textContent = RobcoTime.format(now, true); get('calendarClock').dateTime = now.toISOString();
         get('calendarDate').textContent = now.toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
         const minute = localDay(now) + now.getHours() + ':' + now.getMinutes();
         if ((lastDay !== localDay(now) || lastMinute !== minute) && !get('calendarGrid').contains(document.activeElement) && !get('calendarAgenda').contains(document.activeElement) && !get('calendarDayEvents').contains(document.activeElement)) { lastDay = localDay(now); lastMinute = minute; render(); }

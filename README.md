@@ -232,3 +232,11 @@ CHOOSE IMAGE FROM PC imports PNG, JPEG or WebP (up to 12 MB and 24 million pixel
 The web version stores the image in IndexedDB for this browser/site. Clearing site data or private browsing can remove it. Save/read errors are shown in Settings, canceled imports leave the selection intact, and damaged settings can be repaired with Restore Default.
 
 Verification: `npm test`, `npm run test:settings`, `npm run test:desktop`, `npm run test:browser`. The settings smoke test uses temporary profiles and a mocked file picker with real decoding, IPC and disk storage; it checks a full Electron restart after deleting the original image. Pass `--packaged` to the smoke scripts to test the Windows distribution.
+
+## 24-hour local clocks
+
+The desktop top bar uses HH:mm; Clock & Calendar and terminal TIME use HH:mm:ss,
+through the shared time-format.js formatter. All use PC local time, including midnight
+as 00:00. Event entry and editing accept HH:mm (00:00–23:59), independent of the OS
+12-hour input preference. Events, agenda and reminders retain their existing HH:mm
+values. No saved events, timestamps, notification scheduling or time zones are migrated.
