@@ -1,6 +1,12 @@
 'use strict';
 const { contextBridge, ipcRenderer } = require('electron');
 contextBridge.exposeInMainWorld('robcoDesktop', Object.freeze({
+  wallpaper: Object.freeze({
+    read: () => ipcRenderer.invoke('wallpaper', 'read'),
+    save: value => ipcRenderer.invoke('wallpaper', 'save', value),
+    choose: () => ipcRenderer.invoke('wallpaper', 'choose'),
+    restore: () => ipcRenderer.invoke('wallpaper', 'restore')
+  }),
   openExternal: url => ipcRenderer.invoke('open-external', url),
   browser: Object.freeze({
     navigate: url => ipcRenderer.invoke('vaultnet:control', 'navigate', url),

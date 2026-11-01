@@ -157,6 +157,9 @@ else if(command === "CALCULATOR" || command === "CALC"){
 else if(command === "TIME" || command === "DATE"){
     output.innerHTML += '<br><br>' + escapeTerminalText(command === 'TIME' ? new Date().toLocaleTimeString() : new Date().toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }));
 }
+else if(command === "SETTINGS"){
+    settings.open();
+}
 else if(command === "CALENDAR" || command === "EVENTS"){
     calendar.open();
 }
@@ -391,7 +394,7 @@ if(personalLogs.length > 0){
 }
 
 function showHelp(output){
-    output.innerHTML += '<br><br>PERSONAL APPS: HOLOTAPES | RADIO (or MUSIC) | CALCULATOR (or CALC) | TASKS | TIME | DATE | CALENDAR | EVENTS<br>';
+    output.innerHTML += '<br><br>PERSONAL APPS: HOLOTAPES | RADIO (or MUSIC) | CALCULATOR (or CALC) | TASKS | TIME | DATE | CALENDAR | EVENTS | SETTINGS<br>';
 
     if(overseerMode){
 

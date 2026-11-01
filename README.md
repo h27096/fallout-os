@@ -222,3 +222,13 @@ Events use the dedicated `robco.calendar.v1` localStorage key. Invalid saved dat
 Reminders are checked once per second while the renderer is running, including when the calendar window is closed. A due reminder raises the calendar with a persistent, dismissible in-app alert; VaultNet's native view is hidden by the existing stacking adapter. Native notifications are optional and permission-dependent (the current Electron permissions deny them, so in-app alerts remain the reliable fallback). No background service is installed: events that became due while Fallout OS was closed appear on their calendar date but do not generate retrospective alarms. Sleep or suspended execution can delay reminders until execution resumes. Dates are interpreted in the current local timezone; nonexistent daylight-saving times are rejected, and ambiguous fall-back times use JavaScript's first occurrence.
 
 Validation: `node calendar.test.cjs`, `npm test`, `npm run test:desktop`, and `npm run test:browser`. Tests use isolated browser/Electron profiles.
+
+## Settings and wallpapers (0.8.2)
+
+Open SETTINGS in the desktop dock, or enter SETTINGS in the terminal. Choose Vault-Tec blue, RobCo terminal green, Wasteland, Classic black, or Original RobCo. Artwork is original SVG geometry embedded in the app; no game assets or remote requests. Fill covers the desktop, Fit shows the whole image, and Center uses its original size. Changes save automatically.
+
+CHOOSE IMAGE FROM PC imports PNG, JPEG or WebP (up to 12 MB and 24 million pixels). Electron decodes the image to PNG and stores a private copy with the selection in `personalization/wallpaper.json` inside the existing Electron userData directory. Moving the original image does not affect the saved wallpaper. Images are not added to the repository or uploaded. Switching to a built-in keeps the custom copy available; RESTORE DEFAULT clears that copy, resets Fill, and restores the original #050505 RobCo desktop background. Other app data is untouched.
+
+The web version stores the image in IndexedDB for this browser/site. Clearing site data or private browsing can remove it. Save/read errors are shown in Settings, canceled imports leave the selection intact, and damaged settings can be repaired with Restore Default.
+
+Verification: `npm test`, `npm run test:settings`, `npm run test:desktop`, `npm run test:browser`. The settings smoke test uses temporary profiles and a mocked file picker with real decoding, IPC and disk storage; it checks a full Electron restart after deleting the original image. Pass `--packaged` to the smoke scripts to test the Windows distribution.

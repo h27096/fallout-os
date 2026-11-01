@@ -59,6 +59,13 @@ const { setTimeout: delay } = require('node:timers/promises');
     await until(async () => (await snapshot()).visible, 'native view visible');
     assert.deepEqual(await remote('({topLevel: window === top, node: typeof require, bridge: typeof robcoDesktop, process: typeof process, text: document.querySelector("h1").textContent})'),
       { topLevel: true, node: 'undefined', bridge: 'undefined', process: 'undefined', text: 'VaultNet fixture /first' });
+    await page.evaluate(async () => { await settings.ready; settings.open(); });
+    await until(async () => !(await snapshot()).visible, 'settings hides native view');
+    await page.locator('[data-wallpaper="blue"]').click();
+    await page.waitForFunction(() => document.getElementById('settingsStatus').textContent === 'WALLPAPER SAVED.');
+    await page.locator('#settingsClose').click();
+    await page.evaluate(() => openBrowser());
+    await until(async () => (await snapshot()).visible, 'browser restored after settings');
     await page.evaluate(() => calendar.open());
     await until(async () => !(await snapshot()).visible, 'calendar hides native view');
     await page.locator('#calendarClose').click();

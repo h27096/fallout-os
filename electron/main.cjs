@@ -1,5 +1,5 @@
 'use strict';
-const { app, BrowserWindow, protocol, net, session, dialog, ipcMain, shell } = require('electron');
+const { app, BrowserWindow, protocol, net, session, dialog, ipcMain, shell, nativeImage } = require('electron');
 const path = require('node:path');
 const fs = require('node:fs');
 const { pathToFileURL } = require('node:url');
@@ -17,6 +17,7 @@ ipcMain.handle('open-external', async (event, value) => {
   await shell.openExternal(url.href);
 });
 app.whenReady().then(async () => {
+  require('./wallpaper.cjs').installWallpaper({ app, ipcMain, dialog, nativeImage, getWindow: () => mainWindow, entry });
   // Only renderer assets are reachable. Never expose source, dependencies or arbitrary paths.
   const assets = new Set(fs.readdirSync(root).filter(name => /\.(html|css|js)$/.test(name)));
   protocol.handle('robco', request => {

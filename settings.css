@@ -1,0 +1,12 @@
+/* Background is painted on the desktop itself: never a layer over app windows. */
+#desktopScreen, #wallpaperPreview { background-position: center; background-repeat: no-repeat; }
+#topBar { background: #050505; }
+.settingsBody { padding: 20px; overflow: auto; display: grid; gap: 18px; }
+.settingsBody p { margin: 0; max-width: 85ch; line-height: 1.5; color: #b0ffb0; }
+#wallpaperPreview { height: clamp(100px, 23vh, 240px); border: 1px solid #43874c; }
+#wallpaperChoices, .settingsActions { display: flex; gap: 12px; flex-wrap: wrap; }
+#wallpaperChoices button { min-height: 44px; }
+#wallpaperChoices button[aria-pressed="true"] { outline: 2px solid #b0ffb0; outline-offset: 2px; }
+.settingsBody fieldset { border: 1px solid #43874c; padding: 16px; }
+.settingsBody legend { padding: 0 8px; }
+#settingsStatus { border-top: 1px solid #43874c; }

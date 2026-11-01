@@ -1,6 +1,6 @@
 {
   "name": "fallout-os",
-  "version": "0.8.1",
+  "version": "0.8.2",
   "private": true,
   "description": "Fallout OS desktop and web workspace",
   "author": "Fallout OS contributors",
@@ -14,7 +14,8 @@
     "test:browser": "node tools/vaultnet-smoke.cjs",
     "pack:win": "node tools/build-windows.cjs --dir",
     "build:win": "node tools/build-windows.cjs",
-    "verify:win": "node tools/verify-runtime.cjs"
+    "verify:win": "node tools/verify-runtime.cjs",
+    "test:settings": "node tools/settings-smoke.cjs"
   },
   "devDependencies": {
     "electron": "44.4.3",
