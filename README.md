@@ -250,3 +250,8 @@ The index contains only built-in apps and the existing Fallout OS virtual filesy
 Electron suppresses the native VaultNet view while search is open, even if layout updates arrive. Escape restores native focus when opened from a web page; launching another app respects normal stacking. In a regular browser the same overlay works with a modal dialog; when a cross-origin iframe owns keyboard focus, use the clickable SEARCH launcher.
 
 Verification: npm run test:search (Electron and Edge, isolated profiles); node tools/search-smoke.cjs --packaged tests the Windows package.
+
+
+## RobCo App & Plugin System v1
+
+APP MANAGER installs explicitly confirmed offline .robcoapp packages, lists built-ins and extensions, and supports launch, disable/re-enable and uninstall. Enabled apps appear in the desktop dock and System Search. See [EXTENSIONS.md](EXTENSIONS.md) for the format, security boundary, limitations and original installable sample. The web edition keeps built-in apps but requires Electron for extensions.

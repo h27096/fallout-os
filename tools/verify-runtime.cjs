@@ -12,9 +12,9 @@ function verifyRuntime(directory) {
   }
   const asar = require('@electron/asar');
   const archive = path.join(directory, 'resources/app.asar');
-  for (const name of ['package.json', 'index.html', 'electron/main.cjs', 'electron/preload.cjs', 'electron/vaultnet.cjs', 'vaultnet-desktop.js'])
+  for (const name of ['package.json', 'index.html', 'electron/main.cjs', 'electron/preload.cjs', 'electron/vaultnet.cjs', 'vaultnet-desktop.js', 'electron/extensions.cjs', 'electron/extension-store.cjs', 'extensions.js', 'extensions.css'])
     if (!asar.extractFile(archive, name).length) throw new Error(`Empty app asset: ${name}`);
-  console.log('Verified complete Electron runtime and VaultNet v2 app archive.');
+  console.log('Verified complete Electron runtime, VaultNet v2 and RobCo extension app archive.');
 }
 module.exports = async context => { if (context.electronPlatformName === 'win32') verifyRuntime(context.appOutDir); };
 module.exports.verifyRuntime = verifyRuntime;

@@ -6,7 +6,7 @@ const { pathToFileURL } = require('node:url');
 const { installVaultNet } = require('./vaultnet.cjs');
 const root = path.join(__dirname, '..');
 const entry = 'robco://app/index.html';
-protocol.registerSchemesAsPrivileged([{ scheme: 'robco', privileges: { standard: true, secure: true, supportFetchAPI: true } }]);
+protocol.registerSchemesAsPrivileged(['robco', 'robco-extension'].map(scheme => ({ scheme, privileges: { standard: true, secure: true, supportFetchAPI: true } })));
 app.enableSandbox();
 let mainWindow;
 ipcMain.handle('open-external', async (event, value) => {
@@ -17,6 +17,7 @@ ipcMain.handle('open-external', async (event, value) => {
   await shell.openExternal(url.href);
 });
 app.whenReady().then(async () => {
+  require('./extensions.cjs').installExtensions({ app, BrowserWindow, session, ipcMain, dialog, getWindow: () => mainWindow, entry });
   require('./wallpaper.cjs').installWallpaper({ app, ipcMain, dialog, nativeImage, getWindow: () => mainWindow, entry });
   // Only renderer assets are reachable. Never expose source, dependencies or arbitrary paths.
   const assets = new Set(fs.readdirSync(root).filter(name => /\.(html|css|js)$/.test(name)));

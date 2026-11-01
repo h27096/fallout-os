@@ -26,11 +26,11 @@ async function exercise(page) {
         await page.keyboard.press('Control+Space'); await input.waitFor({ state: 'visible' }); await input.fill(query);
     };
     await page.locator('#searchLauncher').click();
-    assert.equal(await page.locator('#searchResults [role="option"]').count(), 9);
+    assert.equal(await page.locator('#searchResults [role="option"]').count(), 10);
     await page.keyboard.press('ArrowDown');
     assert.equal(await input.getAttribute('aria-activedescendant'), 'searchResult1');
     await page.keyboard.press('ArrowUp'); await page.keyboard.press('ArrowUp');
-    assert.equal(await input.getAttribute('aria-activedescendant'), 'searchResult8');
+    assert.equal(await input.getAttribute('aria-activedescendant'), 'searchResult9');
     await page.keyboard.press('Tab'); await page.keyboard.press('Tab');
     assert.equal(await page.evaluate(() => document.getElementById('systemSearch').contains(document.activeElement)), true);
     await page.keyboard.press('Escape');

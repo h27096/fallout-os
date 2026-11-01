@@ -1,6 +1,13 @@
 'use strict';
 const { contextBridge, ipcRenderer } = require('electron');
 contextBridge.exposeInMainWorld('robcoDesktop', Object.freeze({
+  extensions: Object.freeze({
+    list: () => ipcRenderer.invoke('extensions', 'list'),
+    install: () => ipcRenderer.invoke('extensions', 'install'),
+    enable: (id, enabled) => ipcRenderer.invoke('extensions', 'enable', id, enabled),
+    uninstall: id => ipcRenderer.invoke('extensions', 'uninstall', id),
+    launch: id => ipcRenderer.invoke('extensions', 'launch', id)
+  }),
   wallpaper: Object.freeze({
     read: () => ipcRenderer.invoke('wallpaper', 'read'),
     save: value => ipcRenderer.invoke('wallpaper', 'save', value),

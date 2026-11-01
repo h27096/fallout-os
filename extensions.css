@@ -1,0 +1,10 @@
+.extensionBody { overflow: auto; padding: 16px; flex: 1; }
+.extensionBody h2 { font-size: 1rem; margin-top: 24px; }
+.extensionRow { border: 1px solid #3c8050; margin: 12px 0; padding: 12px; overflow-wrap: anywhere; }
+.extensionRow small { display: block; margin: 8px 0; }
+.extensionRow button { margin: 4px 8px 0 0; }
+#extensionLaunchers { display: contents; }
+#extensionBuiltins { columns: 2; line-height: 1.8; }
+#desktopIcons { flex-wrap: nowrap; overflow-x: auto; box-sizing: border-box; }
+#desktopIcons button { flex-shrink: 0; }
+@media (max-width: 760px) { #desktopIcons { max-height: 146px; overflow-y: auto; } }

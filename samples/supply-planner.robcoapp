@@ -1,0 +1,16 @@
+{
+  "manifest": {
+    "formatVersion": 1,
+    "id": "user.supply-planner",
+    "name": "Wasteland Supply Planner",
+    "version": "1.0.0",
+    "description": "Calculate food and water for your next expedition. Original offline sample app.",
+    "entry": "index.html",
+    "permissions": []
+  },
+  "files": {
+    "index.html": "<!doctype html><html lang=\"en\"><head><meta charset=\"utf-8\"><title>Supply Planner</title><link rel=\"stylesheet\" href=\"style.css\"></head><body><small>ROBCO FIELD TOOLS // ORIGINAL SAMPLE</small><h1>Wasteland Supply Planner</h1><p>Plan supplies before leaving the vault.</p><form id=\"planner\"><label>Travelers<input id=\"travelers\" type=\"number\" min=\"1\" max=\"100\" value=\"2\" required></label><label>Days away<input id=\"days\" type=\"number\" min=\"1\" max=\"365\" value=\"3\" required></label><button id=calculate type=button>CALCULATE SUPPLIES</button></form><output id=\"result\" aria-live=\"polite\">Ready for your expedition.</output><p>Planning estimate: 2 water units and 3 meal packs per traveler per day. This app does not save expedition details.</p><script src=\"app.js\"></script></body></html>",
+    "style.css": "body{background:#04170e;color:#a7ffb6;font:16px monospace;padding:28px;max-width:640px;margin:auto}h1{font-size:28px}label{display:block;margin:18px 0}input,button{font:inherit;background:#102e1c;color:#a7ffb6;border:1px solid #70c888;padding:10px;margin-left:12px}input{width:80px}button{margin:0;cursor:pointer}output{display:block;border:1px solid #70c888;padding:20px;margin:24px 0}p{line-height:1.6}",
+    "app.js": "document.getElementById(\"calculate\").addEventListener(\"click\", event => { event.preventDefault(); const people = Number(document.getElementById(\"travelers\").value), days = Number(document.getElementById(\"days\").value); if (!Number.isInteger(people) || !Number.isInteger(days) || people < 1 || people > 100 || days < 1 || days > 365) return; document.getElementById(\"result\").textContent = `${people * days * 2} water units · ${people * days * 3} meal packs`; });"
+  }
+}

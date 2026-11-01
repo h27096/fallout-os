@@ -2,6 +2,7 @@
 'use strict';
 const RobcoSearch = (() => {
     const apps = [
+        ['RobCo App Manager', 'Install enable disable uninstall apps plugins extensions', () => RobcoExtensions.open()],
         ['Terminal', 'Commands console', openTerminal],
         ['VaultNet', 'Browser web internet', openBrowser],
         ['Files', 'File Explorer folders records', () => openExplorer('/')],
@@ -25,7 +26,7 @@ const RobcoSearch = (() => {
     let index = [], matches = [], selected = 0, previous = null, nativeFocus = false, opening = false, generation = 0;
     const normalize = text => text.normalize('NFKC').toLocaleLowerCase();
     function collect() {
-        return apps.concat(vaultFiles.searchEntries().map(item => {
+        return apps.concat(RobcoExtensions.entries(), vaultFiles.searchEntries().map(item => {
             const tape = item.type === 'file' && vaultFiles.parent(item.path) === '/VAULT/HOLOTAPES';
             return { title: tape ? item.name.replace(/\.(DAT|LOG)$/, '') : item.name,
                 detail: 'C:/ROBCO' + item.path, type: tape ? 'HOLOTAPE' : item.type.toUpperCase(),
@@ -110,5 +111,6 @@ const RobcoSearch = (() => {
         }
     }, true);
     window.robcoDesktop?.search.onOpen(() => { void open(true); });
-    return Object.freeze({ open });
+    window.addEventListener('robco:extensions-changed', () => { if (dialog.open) { index = collect(); render(); } });
+    return Object.freeze({ open, builtins: () => apps.map(({ title }) => ({ title })) });
 })();
